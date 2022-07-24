@@ -1,0 +1,140 @@
+---
+title: 'Creating an addon-like experience in Storybook using parameters and globals'
+date: '2022-08-24'
+tags: []
+draft: false
+summary: 'Hello!'
+---
+
+Whenever using Storybook, you might face a situation where you want certain functionality for your stories, such as internationalization, theming, etc.
+
+In such situations, developers normally go for [Storybook addons](https://storybook.js.org/addons/), which are tools that can be installed to enhance the development experience in Storybook, or add support for certain functionalities. They can normally be activated via parameters like so:
+
+```js
+// MyComponent.stories.js
+
+export const MyStory = {
+  parameters: {
+    theme: 'dark',
+    i18n: 'en',
+  },
+}
+```
+
+Or they might introduce a new button in the toolbar which can be changed at runtime:
+
+![Addon in toolbar](/static/images/addon-like-experience/addon-toolbar.png)
+
+Some addons are maintained by the Storybook core team, but most are created and maintained by the community. They're great! But sometimes either your use case is rather specific and you can't find addons for that, or you simply don't want to depend on a third-party addon.
+
+If that's the case, you could probably create an addon of your own.
+
+# Creating an addon might be too much for me
+
+Storybook has great tutorials, including one that shows you [how to create a Storybook addon](https://storybook.js.org/tutorials/create-an-addon/). However, this involves understanding more about Storybook's internals APIs, how to register addons, create presets, handle the addon panel, etc.
+
+If you do create your own addon, that's awesome because you can do so much with it. Even better, you can make it public and end up helping many developers.
+
+But.. sometimes your scenario is so simple that you don't want to go through all of that.
+
+Thankfully, Storybook has a few concepts that we can use to create an addon-like experience, without creating an addon:
+
+1. Decorators
+2. Story context
+3. Parameters
+4. Globals
+
+# Storybook decorators
+
+If you have been using Storybook for a while, you most probably have used or created [decorators](https://storybook.js.org/docs/react/writing-stories/decorators). Decorators are basically wrappers that receive a Story component and enhance it in a certain way. They are used to either provide visual enhancements or functionality (e.g. theming, state management, etc.).
+
+Here's an example of a simple decorator. It wraps the story in a `<div>` element containing some css to add a `maxWidth` and a colored border:
+
+```jsx
+// MyComponent.stories.tsx
+
+const withMaxWidth = (StoryFn) => (
+  <div style={{ maxWidth: 400, margin: 'auto', border: '1px solid #fab' }}>
+    <StoryFn />
+  </div>
+)
+
+export default {
+  title: 'Example/Page',
+  component: Page,
+  // add decorator
+  decorators: [withMaxWidth],
+}
+
+export const MyStory = {}
+```
+
+And here's how it looks like:
+
+![](/static/images/addon-like-experience/decorator.png)
+
+The decorator might be great for a specific story, but what if you want to make this scalable? Then you can move the decorator up to `.storybook/preview.js` and make it global, so it applies to every single story.
+
+But then, you might want to create a way to **opt-out** of this behavior. Or even, to **opt-in**, depending on what you're trying to achieve.
+
+Thankfully, decorators not only receive the story function as an argument, but also the story context.
+
+# Exploring the story context
+
+The [context](https://storybook.js.org/docs/react/writing-stories/decorators#context-for-mocking) is an object that contains a lot of useful information about a story, including `globals` and `parameters`. With that information, we can improve the `withMaxWidth` decorator, allowing users to opt-in to it.
+
+```jsx
+const withMaxWidth = (StoryFn, context) => {
+  // do something with context to make this decorator opt-in or opt-out
+}
+```
+
+## Story parameters
+
+Story [parameters](https://storybook.js.org/docs/react/writing-stories/parameters) are a way to pass data to a story. They are usually used to pass data to a decorator, or to a story component.
+
+We can modify the `withMaxWidth` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the max width if the story contains `parameters.maxWidth: true`:
+
+```js
+const withMaxWidth = (StoryFn, context) => {
+  const { parameters } = context
+
+  // Add border only if passed as a parameter
+  if (parameters.maxWidth) {
+    return (
+      <div style={{ maxWidth: 400, margin: 'auto', border: '1px solid #fab' }}>
+        <StoryFn />
+      </div>
+    )
+  }
+
+  return <StoryFn />
+}
+```
+
+And the story code then becomes:
+
+```jsx
+// MyComponent.stories.jsx
+
+export default {
+  title: 'Example/Page',
+  component: Page,
+  // Decorators are now global, so this is not unnecessary anymore
+  // decorators: [withMaxWidth],
+}
+
+export const MyStory = {
+  parameters: {
+    maxWidth: true,
+  },
+}
+```
+
+This is a great way to enable/disable certain decorator states for a component, but it's slightly limited because it can only happen in code, which means if you want to change the setting, you need to update the code.
+
+If you wanted a way to change the decorator state at runtime, Storybook has a [global state](https://storybook.js.org/docs/react/writing-stories/globals) that can be used, and that is also part of the story context.
+
+## Storybook globals
+
+TBD
