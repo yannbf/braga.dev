@@ -47,10 +47,10 @@
   "devDependencies": {
     "@babel/core": "^7.18.9",
     "@next/bundle-analyzer": "12.1.4",
-    "@storybook/addon-essentials": "^7.0.0-alpha.13",
-    "@storybook/addon-interactions": "^7.0.0-alpha.13",
-    "@storybook/addon-links": "^7.0.0-alpha.13",
-    "@storybook/react-webpack5": "^7.0.0-alpha.13",
+    "@storybook/addon-essentials": "^7.0.0-alpha.17",
+    "@storybook/addon-interactions": "^7.0.0-alpha.17",
+    "@storybook/addon-links": "^7.0.0-alpha.17",
+    "@storybook/react-webpack5": "^7.0.0-alpha.17",
     "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.1.2",
     "babel-loader": "^8.2.5",
@@ -71,7 +71,7 @@
     "prettier-plugin-tailwindcss": "^0.1.4",
     "socket.io": "^4.4.0",
     "socket.io-client": "^4.4.0",
-    "storybook": "^7.0.0-alpha.13"
+    "storybook": "^7.0.0-alpha.17"
   },
   "lint-staged": {
     "*.+(js|jsx|ts|tsx)": [
