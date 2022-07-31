@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "start": "cross-env SOCKET=true node ./scripts/next-remote-watch.js ./data",
-    "dev": "next dev",
-    "build": "next build && node ./scripts/generate-sitemap",
+    "dev": "next dev --hostname 192.168.68.107",
+    "build-next": "next build && node ./scripts/generate-sitemap",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir components --dir lib --dir layouts --dir scripts",
     "prepare": "husky install",
     "storybook": "npx storybook dev -p 6006",
-    "build-storybook": "npx storybook build"
+    "build-storybook": "npx storybook build",
+    "build": "yarn build-next && yarn build-storybook -o .next/static/storybook"
   },
   "dependencies": {
     "@fontsource/inter": "4.5.2",
@@ -54,6 +55,7 @@
     "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.1.2",
     "babel-loader": "^8.2.5",
+    "chromatic": "^6.7.2",
     "cross-env": "^7.0.3",
     "dedent": "^0.7.0",
     "eslint": "^7.29.0",

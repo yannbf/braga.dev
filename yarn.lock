@@ -3997,7 +3997,7 @@
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
   integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
 
-"@types/webpack-env@^1.16.0", "@types/webpack-env@^1.16.4":
+"@types/webpack-env@^1.16.0", "@types/webpack-env@^1.16.4", "@types/webpack-env@^1.17.0":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.17.0.tgz#f99ce359f1bfd87da90cc4a57cab0a18f34a48d0"
   integrity sha512-eHSaNYEyxRA5IAG0Ym/yCyf86niZUIF/TpWKofQI/CVfh5HsMEUyfE2kwFxha4ow0s5g0LfISQxpDKjbRDrizw==
@@ -5186,6 +5186,13 @@ chownr@^1.1.1:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
   integrity sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==
+
+chromatic@6.6.0:
+  version "6.6.4"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.6.4.tgz#39c82d82070f9ee9792ae2432061bca38fe210e4"
+  integrity sha512-3E3yget80FHufWUI5HGPeobflD6hl1aXRrLtSeTIz02RV0ytYhMbS5j9/IzNGiuy9FWnfP7TcOXKNiwD3qn1kQ==
+  dependencies:
+    "@types/webpack-env" "^1.17.0"
 
 chrome-trace-event@^1.0.2:
   version "1.0.3"
