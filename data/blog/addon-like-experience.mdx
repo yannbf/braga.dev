@@ -6,7 +6,7 @@ draft: false
 summary: 'Hello!'
 ---
 
-Whenever using Storybook, you might face a situation where you want certain functionality for your stories, such as internationalization, theming, etc.
+Whenever using Storybook, you might face a situation where you want certain functionality for your stories, such as internationalization, theming, right to left mode etc.
 
 In such situations, developers normally go for [Storybook addons](https://storybook.js.org/addons/), which are tools that can be installed to enhance the development experience in Storybook, or add support for certain functionalities. They can normally be activated via parameters like so:
 
@@ -15,8 +15,12 @@ In such situations, developers normally go for [Storybook addons](https://storyb
 
 export const MyStory = {
   parameters: {
-    theme: 'dark',
-    i18n: 'en',
+    theme: {
+      default: 'dark',
+    },
+    i18n: {
+      lang: 'en',
+    },
   },
 }
 ```
@@ -29,32 +33,45 @@ Some addons are maintained by the Storybook core team, but most are created and 
 
 If that's the case, you could probably create an addon of your own.
 
-# Creating an addon might be too much for me
+## Creating an addon might be too much for me
 
-Storybook has great tutorials, including one that shows you [how to create a Storybook addon](https://storybook.js.org/tutorials/create-an-addon/). However, this involves understanding more about Storybook's internals APIs, how to register addons, create presets, handle the addon panel, etc.
+Storybook has great tutorials, including one that shows you [how to create a Storybook addon](https://storybook.js.org/tutorials/create-an-addon/). However, this involves understanding more about Storybook's internals APIs, how to register addons, create presets, handle the addon panel if necessary, etc.
 
-If you do create your own addon, that's awesome because you can do so much with it. Even better, you can make it public and end up helping many developers.
+If you do create your own addon, that's awesome because you can do so much with it. Even better, you can make it public and end up helping many developers in a similar situation! In fact, Storybook provides a template for you to create addons with, called [addon-kit](https://github.com/storybookjs/addon-kit).
 
 But.. sometimes your scenario is so simple that you don't want to go through all of that.
 
-Thankfully, Storybook has a few concepts that we can use to create an addon-like experience, without creating an addon:
+Thankfully, Storybook has a few concepts that we can use to create an addon-like experience, without actually creating an addon:
 
 1. Decorators
 2. Story context
 3. Parameters
 4. Globals
 
-# Storybook decorators
+## The use case
+
+To illustrate the concepts clearly, I'll be showing you how to create an addon-like experience to provide [RTL (right to left)](https://developer.mozilla.org/en-US/docs/Glossary/rtl) mode to your stories. **You can then use this knowledge to build pretty much anything else you want**.
+
+> 💡 RTL (Right To Left) is a locale property indicating that text is written from right to left. It's common in languages like Arabic and Hebrew.
+
+I'll be using the `Page` story as example, which comes from the boilerplate that Storybook generates when first installed:
+
+![](/static/images/addon-like-experience/story-default.png)
+
+Alright, let's get to it.
+
+## Storybook decorators
 
 If you have been using Storybook for a while, you most probably have used or created [decorators](https://storybook.js.org/docs/react/writing-stories/decorators). Decorators are basically wrappers that receive a Story component and enhance it in a certain way. They are used to either provide visual enhancements or functionality (e.g. theming, state management, etc.).
 
-Here's an example of a simple decorator. It wraps the story in a `<div>` element containing some css to add a `maxWidth` and a colored border:
+Here's an example of a simple decorator for RTL mode. It wraps the story in a `<div>` element adding `dir="rtl"` to it:
 
 ```jsx
-// MyComponent.stories.tsx
+// Page.stories.tsx
 
-const withMaxWidth = (StoryFn) => (
-  <div style={{ maxWidth: 400, margin: 'auto', border: '1px solid #fab' }}>
+// define decorator
+const withRTL = (StoryFn) => (
+  <div dir="rtl">
     <StoryFn />
   </div>
 )
@@ -62,16 +79,17 @@ const withMaxWidth = (StoryFn) => (
 export default {
   title: 'Example/Page',
   component: Page,
-  // add decorator
-  decorators: [withMaxWidth],
+  // apply decorator to all stories in this file
+  decorators: [withRTL],
 }
 
-export const MyStory = {}
+// define story
+export const LoggedOut = {}
 ```
 
 And here's how it looks like:
 
-![](/static/images/addon-like-experience/decorator.png)
+![](/static/images/addon-like-experience/story-with-rtl.png)
 
 The decorator might be great for a specific story, but what if you want to make this scalable? Then you can move the decorator up to `.storybook/preview.js` and make it global, so it applies to every single story.
 
@@ -79,30 +97,30 @@ But then, you might want to create a way to **opt-out** of this behavior. Or eve
 
 Thankfully, decorators not only receive the story function as an argument, but also the story context.
 
-# Exploring the story context
+## Exploring the story context
 
-The [context](https://storybook.js.org/docs/react/writing-stories/decorators#context-for-mocking) is an object that contains a lot of useful information about a story, including `globals` and `parameters`. With that information, we can improve the `withMaxWidth` decorator, allowing users to opt-in to it.
+The [context](https://storybook.js.org/docs/react/writing-stories/decorators#context-for-mocking) is an object that contains a lot of useful information about a story, including `globals` and `parameters`. With that information, we can improve the `withRTL` decorator, allowing users to opt-in to it.
 
 ```jsx
-const withMaxWidth = (StoryFn, context) => {
+const withRTL = (StoryFn, context) => {
   // do something with context to make this decorator opt-in or opt-out
 }
 ```
 
 ## Story parameters
 
-Story [parameters](https://storybook.js.org/docs/react/writing-stories/parameters) are a way to pass data to a story. They are usually used to pass data to a decorator, or to a story component.
+Story [parameters](https://storybook.js.org/docs/react/writing-stories/parameters) are a way to pass metadata to a story. They are normally used to define the behavior of some Storybook features or Storybook addons. However, you can also use parameters to pass any arbitrary data, which will make its way to the story context.
 
-We can modify the `withMaxWidth` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the max width if the story contains `parameters.maxWidth: true`:
+We can modify the `withRTL` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the right to left mode if the story contains `parameters.rtl: true`:
 
 ```js
-const withMaxWidth = (StoryFn, context) => {
+const withRTL = (StoryFn, context) => {
   const { parameters } = context
 
-  // Add border only if passed as a parameter
-  if (parameters.maxWidth) {
+  // Set RTL only if passed as a parameter
+  if (parameters.rtl) {
     return (
-      <div style={{ maxWidth: 400, margin: 'auto', border: '1px solid #fab' }}>
+      <div dir="rtl">
         <StoryFn />
       </div>
     )
@@ -115,18 +133,18 @@ const withMaxWidth = (StoryFn, context) => {
 And the story code then becomes:
 
 ```jsx
-// MyComponent.stories.jsx
+// Page.stories.jsx
 
 export default {
   title: 'Example/Page',
   component: Page,
   // Decorators are now global, so this is not unnecessary anymore
-  // decorators: [withMaxWidth],
+  // decorators: [withRTL],
 }
 
-export const MyStory = {
+export const LoggedOut = {
   parameters: {
-    maxWidth: true,
+    rtl: true,
   },
 }
 ```
@@ -138,3 +156,7 @@ If you wanted a way to change the decorator state at runtime, Storybook has a [g
 ## Storybook globals
 
 TBD
+
+## Conclusion
+
+If you want to know more about the potential of Storybook and how to use it effectively in React projects, I created a [course](https://www.newline.co/courses/storybook-for-react-apps) that goes from the basics to complex features, with lots of pro tips in between.
