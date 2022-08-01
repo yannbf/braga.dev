@@ -11,7 +11,7 @@ export const parameters = {
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
-  // Set RTL only if passed as a parameter
+  // Set RTL only if passed as a parameter or toggled via toolbar
   if (parameters.rtl || globals.textDirection === 'rtl') {
     return (
       <div dir="rtl">
@@ -29,8 +29,10 @@ export const globalTypes = {
   textDirection: {
     name: 'Text direction',
     description: 'Direction of the text',
-    defaultValue: 'LTR',
+    defaultValue: 'ltr',
     toolbar: {
+      // See this link for the list of available icons that you can use:
+      // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
       icon: 'arrowrightalt',
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },

@@ -1,7 +1,7 @@
 ---
 title: 'Creating an addon-like experience in Storybook using parameters and globals'
 date: '2022-07-24'
-tags: ['storybook', 'tutorial']
+tags: ['storybook', 'tutorial', 'storybook fundamentals']
 draft: false
 images: ['/static/images/addon-like-experience/banner.png']
 summary: 'Bringing your Storybook to the next level with simple steps'
@@ -11,9 +11,7 @@ Whenever using Storybook, you might face a situation where you want certain func
 
 In such situations, developers normally go for [Storybook addons](https://storybook.js.org/addons/), which are tools that can be installed to enhance the development experience in Storybook, or add support for certain functionalities. They can normally be activated via parameters like so:
 
-```js
-// MyComponent.stories.js
-
+```js:MyComponent.stories.js
 export const MyStory = {
   parameters: {
     theme: {
@@ -44,10 +42,10 @@ But.. sometimes your scenario is so simple that you don't want to go through all
 
 Thankfully, Storybook has a few concepts that we can use to create an addon-like experience, without actually creating an addon:
 
-1. Decorators
-2. Story context
-3. Parameters
-4. Globals
+1. **Decorators**
+2. **Story context**
+3. **Parameters**
+4. **Globals**
 
 ## The use case
 
@@ -67,9 +65,7 @@ If you have been using Storybook for a while, you most probably have used or cre
 
 Here's an example of a simple decorator for RTL mode. It wraps the story in a `<div>` element adding `dir="rtl"` to it:
 
-```jsx
-// Page.stories.tsx
-
+```jsx:Page.stories.jsx
 // define decorator
 const withRTL = (StoryFn) => (
   <div dir="rtl">
@@ -85,36 +81,77 @@ export default {
 }
 
 // define story
-export const LoggedOut = {}
+export const Default = {}
 ```
+
+> ⚠️ If you don't use React, I got you covered. Keep reading and at the end I'll show you how to achieve the same thing in a different way.
 
 And here's how it looks like:
 
 ![](/static/images/addon-like-experience/story-with-rtl.png)
 
-The decorator might be great for a specific story, but what if you want to make this scalable? Then you can move the decorator up to `.storybook/preview.js` and make it global, so it applies to every single story.
+The decorator might be great for a specific story, but what if you want to make this scalable? You probably don't want to repeat the same code in every file. Thanks to the way data is inherited in Storybook, you can move the decorator up to `.storybook/preview.js` and make it global, so it applies to every single story:
 
-But then, you might want to create a way to **opt-out** of this behavior. Or even, to **opt-in**, depending on what you're trying to achieve.
+```jsx:.storybook/preview.js
+// Code moved from Page.stories.jsx
+const withRTL = (StoryFn) => {
+  return (
+    <div dir="rtl">
+      <StoryFn />
+    </div>
+  )
+}
 
-Thankfully, decorators not only receive the story function as an argument, but also the story context.
+// Whatever decorators are added here will be applied to all stories
+export const decorators = [withRTL]
+```
+
+But then, every story will be in RTL mode. You might want to create a way to **opt-out** of this behavior. Or even, to **opt-in**, depending on what you're trying to achieve.
+
+So what do you do now? There should be a way to define some metadata from a story, so you can decide whether or not to apply the decorator. Thankfully, decorators not only receive the story function as an argument, but also the _story context_, which will provide exactly what we need.
 
 ## Exploring the story context
 
-The [context](https://storybook.js.org/docs/react/writing-stories/decorators#context-for-mocking) is an object that contains a lot of useful information about a story, including `globals` and `parameters`. With that information, we can improve the `withRTL` decorator, allowing users to opt-in to it.
+The [context](https://storybook.js.org/docs/react/writing-stories/decorators#context-for-mocking) is an object that contains contextual data that is necessary for a story to function correctly. It pretty much defines what a story is made of: id, name, args, parameters, globals, and more.
 
-```jsx
+If we update the decorator to access and log the context, like so:
+
+```jsx:.storybook/preview.js {2-3}
 const withRTL = (StoryFn, context) => {
-  // do something with context to make this decorator opt-in or opt-out
+  // context will contain useful data that can be leveraged in the decorator
+  console.log(context);
+  return (
+    <div dir="rtl">
+      <StoryFn />
+    </div>
+  )
 }
 ```
+
+We get the following output:
+
+![](/static/images/addon-like-experience/story-context.png)
+
+What stands out from there are `globals` and `parameters`. Having access to such data in a decorator gives a lot of possibilities for creating a custom API to do whatever you like. Let's understand why.
 
 ## Story parameters
 
 Story [parameters](https://storybook.js.org/docs/react/writing-stories/parameters) are a way to pass metadata to a story. They are normally used to define the behavior of some Storybook features or Storybook addons. However, you can also use parameters to pass any arbitrary data, which will make its way to the story context.
 
-We can modify the `withRTL` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the right to left mode if the story contains `parameters.rtl: true`:
+We can create our own API to communicate with the `withRTL` decorator, allowing users to opt-in to it, for example:
 
 ```js
+export const Default = {
+  parameters: {
+    // opt-in to RTL mode for this story
+    rtl: true,
+  },
+}
+```
+
+We can modify the `withRTL` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the RTL mode if the story contains `parameters.rtl: true`:
+
+```js:.storybook/preview.js {2,4}
 const withRTL = (StoryFn, context) => {
   const { parameters } = context
 
@@ -127,49 +164,158 @@ const withRTL = (StoryFn, context) => {
     )
   }
 
+  // else, render the story normally
   return <StoryFn />
 }
 ```
 
 And the story code then becomes:
 
-```jsx
-// Page.stories.jsx
-
+```jsx:Page.stories.jsx {4,5,9-11}
 export default {
   title: 'Example/Page',
   component: Page,
-  // Decorators are now global, so this is not unnecessary anymore
+  // Decorators are now global, so this is not needed anymore
   // decorators: [withRTL],
 }
 
-export const LoggedOut = {
+export const Default = {
   parameters: {
     rtl: true,
   },
 }
 ```
 
-This is a great way to enable/disable certain decorator states for a component, but it's slightly limited because it can only happen in code, which means if you want to change the setting, you need to update the code.
+As a result, we retain the same experience as before, but now it can be enabled by simply defining a parameter, just like how you communicate with some addons you use (e.g. viewports, backgrounds).
+
+This is a great way to enable/disable certain decorator states for a component. However, this is slightly limited because it can only happen in code, which means if you want to change the setting, you need to update the code.
 
 If you wanted a way to change the decorator state at runtime, Storybook has a [global state](https://storybook.js.org/docs/react/writing-stories/globals) that can be used, and that is also part of the story context.
 
 ## Storybook globals
 
-TBD
+Storybook has a [global state](https://storybook.js.org/docs/react/writing-stories/globals) that stores data which is used by addons, and gets persisted across stories. Such data is also available in the story context.
+
+If you're using [addon-essentials](https://storybook.js.org/docs/react/essentials/) (most Storybook projects use it nowadays), you can create custom toolbars for your project, which will add data to the global state of Storybook, and change it as you interact with your newly created toolbar. We can leverage this to create a runtime experience that allows users to switch from LTR to RTL in any story they want, just by clicking on a button.
+
+### Creating a custom toolbar with addon-toolbars
+
+In order to create a toolbar item of our own, we can follow the documentation [here](https://storybook.js.org/docs/react/essentials/toolbars-and-globals#global-types-and-the-toolbar-annotation) and export a `globalTypes` object in `.storybook/preview.js`:
+
+```js:.storybook/preview.js
+export const globalTypes = {
+  // This will generate a globals.textDirection property
+  textDirection: {
+    name: 'Text direction',
+    description: 'Direction of the text',
+    defaultValue: 'ltr',
+    toolbar: {
+      // See this link for the list of available icons that you can use:
+      // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
+      icon: 'arrowrightalt',
+      items: [
+        { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
+        { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+      ],
+    },
+  },
+}
+```
+
+Now when checking Storybook, we see that there is a new button in the toolbar:
+
+![](/static/images/addon-like-experience/toolbar-not-working.gif)
+
+As we interact with it, nothing really happens. That makes sense! We didn't wire our decorator to use those global values yet. Let's do that.
+
+### Setting the text direction via globals
+
+Looking back at the `withRTL` decorator, we can now extract `globals` from the context, which should contain the `textDirection` property that we defined via globalTypes. The component will re-render every time the globals change, and we can check whether the value is `rtl` or `ltr` to opt-in to the different modes. We should still support the parameter we created, and it should respect it as higher priority than the global state:
+
+```jsx:.storybook/preview.js {2,5}
+const withRTL = (StoryFn, context) => {
+  const { parameters, globals } = context
+
+  // Set RTL only if passed as a parameter or toggled via toolbar
+  if (parameters.rtl || globals.textDirection === 'rtl') {
+    return (
+      <div dir="rtl">
+        <StoryFn />
+      </div>
+    )
+  }
+
+  return <StoryFn />
+}
+```
+
+Now we can successfully change the theme without having to make any code changes! And because we are respecting the parameters defined in the `Default` story, the globals won't do anything. However, when going to any other story, we are able to toggle the reading modes:
+
+![](/static/images/addon-like-experience/toolbar-working.gif)
+
+This is great because you probably want stories that will always represent certain state (e.g. RTL, dark mode, etc.), but you want the flexibility to experiment freely in other stories.
+
+## The best of both worlds
+
+Now that we have a way to change the reading mode both via parameters and globals, we should probably create a new story for the RTL mode, and leave the `Default` story without parameters:
+
+```jsx:Page.stories.jsx
+export const Default = {}
+
+export const DefaultRTL = {
+  parameters: {
+    rtl: true,
+  },
+}
+
+// ...other stories
+```
+
+As a result, we can toggle the RTL mode in other stories at runtime by using the toolbar, but we have an explicit story for the RTL mode which will always have it activated. This makes it easier to understand what the story represents, and it also makes it easier to test. Plus, if you're using tools like [Chromatic](https://www.chromatic.com/) for visual regression testing, you will make sure that you're testing what matters.
+
+## Applying the decorator logic for non-React projects
+
+_This all sounds super nice, but what if I'm using Storybook with Angular, where I can't wrap components with JSX? Or what if I don't want to change markup, but execute something programmatically?_
+
+Thankfully, changing reading mode can also be done programmatically via the `document.body.dir` property. Storybook provides react-like hooks that can be used in any framework (Angular, Vue, Svelte, etc.), and we can use the `useEffect` hook to apply the reading direction once the component renders:
+
+```jsx:.storybook/preview.js
+const withRTL = (StoryFn, context) => {
+  const { parameters, globals } = context
+
+  // this hook will be called once when the component renders
+  useEffect(() => {
+   // Set RTL only if passed as a parameter or toggled via toolbar
+    const direction = (parameters.rtl || globals.textDirection === 'rtl') ? 'rtl' : 'ltr'
+    document.body.dir = direction
+  }, []);
+
+  return Story();
+}
+```
 
 ## Final result
 
-You can find the code for the decorator in [this repo](https://github.com/yannbf/braga.dev/blob/main/.storybook/preview.js), and here's a live embed of how this all behaves:
+You can find the code for the decorator in [this repo](https://github.com/yannbf/braga.dev/blob/main/.storybook/preview.js), and here's a live embed so you can play around with the real thing:
 
 <iframe
   width="100%"
   height="600"
-  src="https://main--62e6a1f33aafd7bc933a7071.chromatic.com/?path=/story/example-page--logged-out"
+  src="https://main--62e6a1f33aafd7bc933a7071.chromatic.com/?path=/story/example-page--default"
   title="Story example"
   frameBorder="0"
 />
 
 ## Conclusion
 
-If you want to know more about the potential of Storybook and how to use it effectively in React projects, I created a [course](https://www.newline.co/courses/storybook-for-react-apps) that goes from the basics to complex features, with lots of pro tips in between.
+Thank you so much for reading this through. You just learned how to combine the power of small concepts to achieve something greater. This tutorial was using reading modes as a use case, but you can use this knowledge potentially for solutions such as:
+
+- Internationalization
+- Theming -> I wrote a post in the official Storybook blog and you can read it [here](https://storybook.js.org/blog/how-to-add-a-theme-switcher-to-storybook/).
+- State management
+- Routing
+- etc.
+
+The possibilities are endless, and the best way to learn is to try it out. Keep this in your toolbelt, I'm sure it will be very useful to you.
+
+I hope you enjoyed it, and if you have any questions, feel free to reach out on [Twitter](https://twitter.com/yannbf). If you want to know more about the potential of Storybook and how to use it effectively in React projects, I created a [course](https://www.newline.co/courses/storybook-for-react-apps) that goes from the basics to complex features, with lots of pro tips in between!
