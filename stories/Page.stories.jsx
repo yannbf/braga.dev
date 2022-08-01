@@ -11,7 +11,12 @@ export default {
   },
 }
 
-export const LoggedOut = {}
+export const Default = {}
+export const DefaultRTL = {
+  parameters: {
+    rtl: true,
+  },
+}
 
 export const LoggedIn = {
   play: async ({ canvasElement }) => {
