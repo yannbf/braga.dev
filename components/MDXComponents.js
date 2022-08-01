@@ -8,7 +8,8 @@ import Pre from './Pre'
 import { BlogNewsletterForm } from './NewsletterForm'
 
 export const MDXComponents = {
-  Image,
+  // eslint-disable-next-line jsx-a11y/alt-text
+  Image: (props) => <Image placeholder="blur" {...props} />,
   TOCInline,
   a: CustomLink,
   pre: Pre,
