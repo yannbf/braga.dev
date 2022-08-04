@@ -2097,7 +2097,7 @@
     "@devtools-ds/themes" "^1.2.0"
     clsx "1.1.0"
 
-"@discoveryjs/json-ext@^0.5.3":
+"@discoveryjs/json-ext@^0.5.3", "@discoveryjs/json-ext@^0.5.7":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
@@ -5095,6 +5095,13 @@ capture-exit@^2.0.0:
   dependencies:
     rsvp "^4.8.4"
 
+cartesian@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cartesian/-/cartesian-1.0.1.tgz#ae3fc8a63e2ba7e2c4989ce696207457bcae65af"
+  integrity sha512-tR3qKRYpRJ6FXEGuoBwpuCYcwydrk1N2rduy7eWg1Msepi3i5fCxheryw4VBlCqjCbk3Vhjh3eg+IGHtl5H74A==
+  dependencies:
+    xtend "^4.0.1"
+
 case-sensitive-paths-webpack-plugin@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.4.0.tgz#db64066c6422eed2e08cc14b986ca43796dbc6d4"
@@ -5187,11 +5194,12 @@ chownr@^1.1.1:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
   integrity sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==
 
-chromatic@6.6.0:
-  version "6.6.4"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.6.4.tgz#39c82d82070f9ee9792ae2432061bca38fe210e4"
-  integrity sha512-3E3yget80FHufWUI5HGPeobflD6hl1aXRrLtSeTIz02RV0ytYhMbS5j9/IzNGiuy9FWnfP7TcOXKNiwD3qn1kQ==
+chromatic@^6.7.2:
+  version "6.7.3"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.7.3.tgz#101821cb9fd7cd61ee82ad34fde36b1693622579"
+  integrity sha512-QVeP9LRj/4r/eVCyX+TybFEl7iyQ+6QzrkPChtoDhFw0B24B1y13Mya3FElltb+EPDsEG6V5VYzYnG+w/VPmaw==
   dependencies:
+    "@discoveryjs/json-ext" "^0.5.7"
     "@types/webpack-env" "^1.17.0"
 
 chrome-trace-event@^1.0.2:
@@ -12671,6 +12679,13 @@ store2@^2.12.0:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
+
+storybook-addon-variants@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/storybook-addon-variants/-/storybook-addon-variants-0.2.0.tgz#e8038aae3f70c0691e97d11bfe2671de84993d6b"
+  integrity sha512-4woVtd+XsHNHN7XDjFFNns1sVYotjYOh5/FP8AR+CzUK9Eb9WPvQ0re5z5rZztndND0NqhhJ5F65Iy4jrz6OzQ==
+  dependencies:
+    cartesian "^1.0.1"
 
 storybook@^7.0.0-alpha.17:
   version "7.0.0-alpha.17"

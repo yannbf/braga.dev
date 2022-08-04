@@ -8,6 +8,17 @@ export default {
   },
 }
 
+export const AllVariants = {
+  args: {
+    label: 'Button',
+  },
+  parameters: {
+    variants: {
+      enable: true,
+    },
+  },
+}
+
 export const Primary = {
   args: {
     primary: true,
