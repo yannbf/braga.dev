@@ -1,3 +1,5 @@
+import ProgressBar from 'react-scroll-progress-bar'
+
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
@@ -22,6 +24,9 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
   const readingTimeText = readTime ? `${readTime} min read` : readingTime.text
   return (
     <SectionContainer>
+      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+        <ProgressBar bgcolor="#14b8a6" height="1px" />
+      </div>
       <BlogSEO
         url={`${siteMetadata.siteUrl}/blog/${slug}`}
         authorDetails={authorDetails}
