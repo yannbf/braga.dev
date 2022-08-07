@@ -17,8 +17,9 @@ const discussUrl = (slug) =>
 const postDateTemplate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
 export default function PostLayout({ frontMatter, authorDetails, next, prev, children }) {
-  const { slug, fileName, date, title, images, tags } = frontMatter
+  const { slug, fileName, date, title, images, tags, readingTime, readTime } = frontMatter
 
+  const readingTimeText = readTime ? `${readTime} min read` : readingTime.text
   return (
     <SectionContainer>
       <BlogSEO
@@ -83,6 +84,10 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
                     </li>
                   ))}
                 </ul>
+                <div className="mt-4">
+                  {'⏳'}
+                  <span className="ml-1">{readingTimeText}</span>
+                </div>
               </dd>
             </dl>
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
