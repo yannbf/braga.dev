@@ -17,6 +17,9 @@
 .csl-entry {
   @apply my-5;
 }
+* {
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
 
 /* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
 input:-webkit-autofill,
