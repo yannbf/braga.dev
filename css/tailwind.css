@@ -38,3 +38,15 @@ input:-webkit-autofill:focus {
 button {
   touch-action: manipulation;
 }
+
+.currentColor path {
+  stroke-width: 1px;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.thick-boi path {
+  stroke-width: 17px;
+  fill: currentColor;
+  stroke: currentColor;
+}

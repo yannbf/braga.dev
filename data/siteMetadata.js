@@ -6,15 +6,15 @@ const siteMetadata = {
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://yannbraga.dev',
-  siteRepo: 'https://github.com/yannbf/blog-next',
+  siteRepo: 'https://github.com/yannbf/braga.dev',
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
   email: 'yannbf@gmail.com',
-  github: 'https://github.com',
-  twitter: 'https://twitter.com/Twitter',
+  github: 'https://github.com/yannbf',
+  twitter: 'https://twitter.com/yannbf',
   youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
+  linkedin: 'https://www.linkedin.com/in/yannbraga/',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
