@@ -3,8 +3,6 @@ import Github from './github.svg'
 import Linkedin from './linkedin.svg'
 import Twitter from './twitter.svg'
 
-// Icons taken from: https://simpleicons.org/
-
 const components = {
   github: Github,
   // youtube: Youtube,
@@ -35,7 +33,7 @@ const SocialIcon = ({ kind, href, size = 8 }) => {
     >
       <span className="sr-only">{kind}</span>
       <SocialSvg
-        className={`fill-current text-gray-700 hover:text-${iconColor}-500 dark:text-gray-200 dark:hover:text-${iconColor}-400 h-${size} w-${size}`}
+        className={`text-gray-700 hover:text-${iconColor}-500 dark:text-gray-200 dark:hover:text-${iconColor}-400 h-${size} w-${size}`}
       />
     </a>
   )
