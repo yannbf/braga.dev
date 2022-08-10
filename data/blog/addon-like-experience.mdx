@@ -1,6 +1,7 @@
 ---
 title: 'Creating an addon-like experience in Storybook using parameters and globals'
 date: '2022-08-02'
+lastUpdated: '2022-08-10'
 tags: ['storybook', 'tutorial', 'storybook fundamentals']
 draft: false
 images: ['/static/images/addon-like-experience/banner.png']
@@ -8,7 +9,7 @@ summary: 'Bringing your Storybook to the next level with simple steps'
 readTime: 10
 ---
 
-Whenever using Storybook, you might face a situation where you want certain functionality for your stories, such as internationalization, theming, right to left mode etc.
+Whenever using Storybook, you might face a situation where you want to support certain functionality for your stories, such as internationalization, theming, right to left mode etc.
 
 In such situations, developers normally go for [Storybook addons](https://storybook.js.org/addons/), which are tools that can be installed to enhance the development experience in Storybook, or add support for certain functionalities. They can normally be activated via parameters like so:
 
@@ -145,16 +146,18 @@ We can create our own API to communicate with the `withRTL` decorator, allowing 
 export const Default = {
   parameters: {
     // opt-in to RTL mode for this story
-    rtl: true,
+    textDirection: 'rtl',
   },
 }
 ```
 
-We can modify the `withRTL` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the RTL mode if the story contains `parameters.rtl: true`:
+We can modify the `withRTL` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the RTL mode if the story contains `parameters.textDirection: "rtl"`:
 
-```js:.storybook/preview.js {2,4}
+```js:.storybook/preview.js {2,7}
 const withRTL = (StoryFn, context) => {
   const { parameters } = context
+  const defaultDirection = 'rtl'
+  const textDirection = parameters.textDirection || defaultDirection
 
   // Set RTL only if passed as a parameter
   if (parameters.rtl) {
@@ -172,7 +175,7 @@ const withRTL = (StoryFn, context) => {
 
 And the story code then becomes:
 
-```jsx:Page.stories.jsx {4,5,9-11}
+```jsx:Page.stories.jsx {4-5,9-11}
 export default {
   title: 'Example/Page',
   component: Page,
@@ -182,7 +185,7 @@ export default {
 
 export const Default = {
   parameters: {
-    rtl: true,
+    textDirection: 'rtl',
   },
 }
 ```
@@ -217,6 +220,7 @@ export const globalTypes = {
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
         { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+        { value: 'all', icon: 'transfer', title: 'both' },
       ],
     },
   },
@@ -233,12 +237,15 @@ As we interact with it, nothing really happens. That makes sense! We didn't wire
 
 Looking back at the `withRTL` decorator, we can now extract `globals` from the context, which should contain the `textDirection` property that we defined via globalTypes. The component will re-render every time the globals change, and we can check whether the value is `rtl` or `ltr` to opt-in to the different modes. We should still support the parameter we created, and it should respect it as higher priority than the global state:
 
-```jsx:.storybook/preview.js {2,5}
+```jsx:.storybook/preview.js {2,8}
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
+  const defaultDirection = 'rtl'
+  const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
+
   // Set RTL only if passed as a parameter or toggled via toolbar
-  if (parameters.rtl || globals.textDirection === 'rtl') {
+  if (textDirection === 'rtl') {
     return (
       <div dir="rtl">
         <StoryFn />
@@ -265,7 +272,7 @@ export const Default = {}
 
 export const DefaultRTL = {
   parameters: {
-    rtl: true,
+    textDirection: "rtl",
   },
 }
 
@@ -284,16 +291,91 @@ Thankfully, changing reading mode can also be done programmatically via the `doc
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
+  const defaultDirection = 'rtl'
+  const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
+
   // this hook will be called once when the component renders
   useEffect(() => {
    // Set RTL only if passed as a parameter or toggled via toolbar
-    const direction = (parameters.rtl || globals.textDirection === 'rtl') ? 'rtl' : 'ltr'
-    document.body.dir = direction
+    document.body.dir = textDirection
   }, []);
 
   return Story();
 }
 ```
+
+## Bonus: Rendering both modes at the same time
+
+Sometimes you want to visualize things side by side, so they're easy to compare. To make things even more interesting, we can leverage the use of decorators **to render the same story twice**, in a grid, side by side, each one with a different reading mode.
+
+First, we add a new option to `globalTypes` called "both":
+
+```jsx:.storybook/preview.js {14}
+export const globalTypes = {
+  // This will generate a globals.textDirection property
+  textDirection: {
+    name: 'Text direction',
+    description: 'Direction of the text',
+    defaultValue: 'ltr',
+    toolbar: {
+      // See this link for the list of available icons that you can use:
+      // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
+      icon: 'arrowrightalt',
+      items: [
+        { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
+        { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+        { value: 'all', icon: 'transfer', title: 'both' },
+      ],
+    },
+  },
+}
+```
+
+Then, we update the decorator to account the newly added `both` new scenario, rendering the story twice inside of a grid:
+
+```jsx:.storybook/preview.js {7-23}
+const withRTL = (StoryFn, context) => {
+  const { parameters, globals } = context
+
+  const defaultDirection = 'rtl'
+  const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
+
+  if (textDirection === 'all') {
+    const gridStyles = {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(0px, 1fr))',
+      height: '100vh',
+    }
+    return (
+      <div style={gridStyles}>
+        <div style={{ borderRight: '1px solid #ccc' }}>
+          <StoryFn />
+        </div>
+        <div dir="rtl">
+          <StoryFn />
+        </div>
+      </div>
+    )
+  }
+
+  // Set RTL only if passed as a parameter or toggled via toolbar
+  if (textDirection === 'rtl') {
+    return (
+      <div dir="rtl">
+        <StoryFn />
+      </div>
+    )
+  }
+
+  return <StoryFn />
+}
+```
+
+When selecting the new option in the toolbar, we are able to see both the RTL and the LTR version of the story:
+
+![](/static/images/addon-like-experience/dual-mode.gif)
+
+> 💡 If you want the stories to be on top of each other, you can just tweak the grid styles.
 
 ## Final result
 

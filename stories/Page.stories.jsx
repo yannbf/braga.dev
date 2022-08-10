@@ -7,14 +7,13 @@ export default {
   component: Page,
   parameters: {
     layout: 'fullscreen',
-    // rtl: true,
   },
 }
 
 export const Default = {}
 export const DefaultRTL = {
   parameters: {
-    rtl: true,
+    textDirection: 'rtl',
   },
 }
 

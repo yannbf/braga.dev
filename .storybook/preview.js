@@ -11,8 +11,29 @@ export const parameters = {
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
+  const defaultDirection = 'rtl'
+  const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
+
+  if (textDirection === 'all') {
+    const gridStyles = {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(0px, 1fr))',
+      height: '100vh',
+    }
+    return (
+      <div style={gridStyles}>
+        <div style={{ borderRight: '1px solid #ccc' }}>
+          <StoryFn />
+        </div>
+        <div dir="rtl">
+          <StoryFn />
+        </div>
+      </div>
+    )
+  }
+
   // Set RTL only if passed as a parameter or toggled via toolbar
-  if (parameters.rtl || globals.textDirection === 'rtl') {
+  if (textDirection === 'rtl') {
     return (
       <div dir="rtl">
         <StoryFn />
@@ -37,6 +58,7 @@ export const globalTypes = {
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
         { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+        { value: 'all', icon: 'transfer', title: 'both' },
       ],
     },
   },
