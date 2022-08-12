@@ -1,0 +1,27 @@
+---
+title: 'Creating and managing global decorators in Storybook'
+date: '2022-08-12'
+tags: ['storybook', 'tutorial']
+draft: true
+images: ['/static/images/addon-like-experience/banner.png']
+summary: 'TODO'
+---
+
+Link to the addon-like-experience blog post
+
+```jsx
+const myDecorator = (Story, { parameters }) => {
+  if (parameters.myDecorator?.disable) {
+    return <Story />
+  }
+
+  // Whatever your current decorator does
+)
+```
+
+```jsx
+export const WithoutMyDecorator = // ...
+  (WithoutMyDecorator.parameters = {
+    myDecorator: { disable: true },
+  })
+```
