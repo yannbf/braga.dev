@@ -13,7 +13,7 @@ Whenever using Storybook, you might face a situation where you want to support c
 
 In such situations, developers normally go for [Storybook addons](https://storybook.js.org/addons/), which are tools that can be installed to enhance the development experience in Storybook, or add support for certain functionalities. They can normally be activated via parameters like so:
 
-```js:MyComponent.stories.js
+```js MyComponent.stories.js
 export const MyStory = {
   parameters: {
     theme: {
@@ -67,8 +67,9 @@ If you have been using Storybook for a while, you most probably have used or cre
 
 Here's an example of a simple decorator for RTL mode. It wraps the story in a `<div>` element adding `dir="rtl"` to it:
 
-```jsx:Page.stories.jsx
+```jsx Page.stories.jsx
 // define decorator
+// mark(1:5)
 const withRTL = (StoryFn) => (
   <div dir="rtl">
     <StoryFn />
@@ -79,6 +80,7 @@ export default {
   title: 'Example/Page',
   component: Page,
   // apply decorator to all stories in this file
+  // mark
   decorators: [withRTL],
 }
 
@@ -94,7 +96,7 @@ And here's how it looks like:
 
 The decorator might be great for a specific story, but what if you want to make this scalable? You probably don't want to repeat the same code in every file. Thanks to the way data is inherited in Storybook, you can move the decorator up to `.storybook/preview.js` and make it global, so it applies to every single story:
 
-```jsx:.storybook/preview.js
+```jsx .storybook/preview.js
 // Code moved from Page.stories.jsx
 const withRTL = (StoryFn) => {
   return (
@@ -118,10 +120,11 @@ The [context](https://storybook.js.org/docs/react/writing-stories/decorators#con
 
 If we update the decorator to access and log the context, like so:
 
-```jsx:.storybook/preview.js {2-3}
+```jsx .storybook/preview.js
 const withRTL = (StoryFn, context) => {
+  // mark(1:2)
   // context will contain useful data that can be leveraged in the decorator
-  console.log(context);
+  console.log(context)
   return (
     <div dir="rtl">
       <StoryFn />
@@ -153,8 +156,9 @@ export const Default = {
 
 We can modify the `withRTL` decorator code to extract the `parameters` property from the story context, and make the decorator only apply the RTL mode if the story contains `parameters.textDirection: "rtl"`:
 
-```js:.storybook/preview.js {2,7}
+```js .storybook/preview.js
 const withRTL = (StoryFn, context) => {
+  // mark(1:6)
   const { parameters } = context
   const defaultDirection = 'rtl'
   const textDirection = parameters.textDirection || defaultDirection
@@ -166,24 +170,28 @@ const withRTL = (StoryFn, context) => {
         <StoryFn />
       </div>
     )
+    // mark
   }
-
+  // mark
   // else, render the story normally
+  // mark
   return <StoryFn />
 }
 ```
 
 And the story code then becomes:
 
-```jsx:Page.stories.jsx {4-5,9-11}
+```jsx Page.stories.jsx
 export default {
   title: 'Example/Page',
   component: Page,
+  // mark(1:2)
   // Decorators are now global, so this is not needed anymore
   // decorators: [withRTL],
 }
 
 export const Default = {
+  // mark(1:3)
   parameters: {
     textDirection: 'rtl',
   },
@@ -206,7 +214,7 @@ If you're using [addon-essentials](https://storybook.js.org/docs/react/essential
 
 In order to create a toolbar item of our own, we can follow the documentation [here](https://storybook.js.org/docs/react/essentials/toolbars-and-globals#global-types-and-the-toolbar-annotation) and export a `globalTypes` object in `.storybook/preview.js`:
 
-```js:.storybook/preview.js
+```js .storybook/preview.js
 export const globalTypes = {
   // This will generate a globals.textDirection property
   textDirection: {
@@ -215,12 +223,12 @@ export const globalTypes = {
     defaultValue: 'ltr',
     toolbar: {
       // See this link for the list of available icons that you can use:
+      // link[10:101] https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
       // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
       icon: 'arrowrightalt',
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
         { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
-        { value: 'all', icon: 'transfer', title: 'both' },
       ],
     },
   },
@@ -237,8 +245,9 @@ As we interact with it, nothing really happens. That makes sense! We didn't wire
 
 Looking back at the `withRTL` decorator, we can now extract `globals` from the context, which should contain the `textDirection` property that we defined via globalTypes. The component will re-render every time the globals change, and we can check whether the value is `rtl` or `ltr` to opt-in to the different modes. We should still support the parameter we created, and it should respect it as higher priority than the global state:
 
-```jsx:.storybook/preview.js {2,8}
+```jsx .storybook/preview.js
 const withRTL = (StoryFn, context) => {
+  // mark(1:7)
   const { parameters, globals } = context
 
   const defaultDirection = 'rtl'
@@ -267,12 +276,12 @@ This is great because you probably want stories that will always represent certa
 
 Now that we have a way to change the reading mode both via parameters and globals, we should probably create a new story for the RTL mode, and leave the `Default` story without parameters:
 
-```jsx:Page.stories.jsx
+```jsx Page.stories.jsx
 export const Default = {}
 
 export const DefaultRTL = {
   parameters: {
-    textDirection: "rtl",
+    textDirection: 'rtl',
   },
 }
 
@@ -287,7 +296,7 @@ _This all sounds super nice, but what if I'm using Storybook with Angular, where
 
 Thankfully, changing reading mode can also be done programmatically via the `document.body.dir` property. Storybook provides react-like hooks that can be used in any framework (Angular, Vue, Svelte, etc.), and we can use the `useEffect` hook to apply the reading direction once the component renders:
 
-```jsx:.storybook/preview.js
+```jsx .storybook/preview.js
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
@@ -296,11 +305,11 @@ const withRTL = (StoryFn, context) => {
 
   // this hook will be called once when the component renders
   useEffect(() => {
-   // Set RTL only if passed as a parameter or toggled via toolbar
+    // Set RTL only if passed as a parameter or toggled via toolbar
     document.body.dir = textDirection
-  }, []);
+  }, [])
 
-  return Story();
+  return Story()
 }
 ```
 
@@ -310,7 +319,7 @@ Sometimes you want to visualize things side by side, so they're easy to compare.
 
 First, we add a new option to `globalTypes` called "both":
 
-```jsx:.storybook/preview.js {14}
+```jsx .storybook/preview.js
 export const globalTypes = {
   // This will generate a globals.textDirection property
   textDirection: {
@@ -324,6 +333,7 @@ export const globalTypes = {
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
         { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+        // mark
         { value: 'all', icon: 'transfer', title: 'both' },
       ],
     },
@@ -333,13 +343,14 @@ export const globalTypes = {
 
 Then, we update the decorator to account the newly added `both` new scenario, rendering the story twice inside of a grid:
 
-```jsx:.storybook/preview.js {7-23}
+```jsx .storybook/preview.js
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
   const defaultDirection = 'rtl'
   const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
 
+  // mark(1:17)
   if (textDirection === 'all') {
     const gridStyles = {
       display: 'grid',
@@ -384,7 +395,7 @@ You can find the code for the decorator in [this repo](https://github.com/yannbf
 <iframe
   width="100%"
   height="600"
-  src="https://main--62e6a1f33aafd7bc933a7071.chromatic.com/?path=/story/example-page--default"
+  src="https://main--62e6a1f33aafd7bc933a7071.chromatic.com/?path=/story/example-page--default&embed=true&full=1"
   title="Story example"
   frameBorder="0"
 />
