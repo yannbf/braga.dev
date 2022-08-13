@@ -9,6 +9,8 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import Comments from '@/components/comments'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { useTheme } from 'next-themes'
+import { useMemo } from 'react'
 
 const editUrl = (fileName) => `${siteMetadata.siteRepo}/blob/main/data/blog/${fileName}`
 const discussUrl = (slug) =>
@@ -20,12 +22,20 @@ const postDateTemplate = { weekday: 'long', year: 'numeric', month: 'long', day:
 
 export default function PostLayout({ frontMatter, authorDetails, next, prev, children }) {
   const { slug, fileName, date, title, images, tags, readingTime, readTime } = frontMatter
-
   const readingTimeText = readTime ? `${readTime} min read` : readingTime.text
+  const { theme, resolvedTheme } = useTheme()
+
+  const progressBarColor = useMemo(() => {
+    if (theme === 'dark' || resolvedTheme === 'dark') {
+      return '#14b8a6'
+    }
+    return '#fe3d7a'
+  }, [theme, resolvedTheme])
+
   return (
     <SectionContainer>
       <div style={{ position: 'absolute', top: 0, left: 0 }}>
-        <ProgressBar bgcolor="#14b8a6" height="1px" />
+        <ProgressBar bgcolor={progressBarColor} height="1px" />
       </div>
       <BlogSEO
         url={`${siteMetadata.siteUrl}/blog/${slug}`}
