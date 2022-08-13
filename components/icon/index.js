@@ -18,7 +18,7 @@ const hoverColors = {
   twitter: 'blue',
 }
 
-const SocialIcon = ({ kind, href, size = 8, animated = true }) => {
+const Icon = ({ kind, href, size = 8, animated = true }) => {
   const [animationData, setAnimationData] = useState()
   const lottieRef = useRef()
 
@@ -34,12 +34,17 @@ const SocialIcon = ({ kind, href, size = 8, animated = true }) => {
 
   const iconColor = hoverColors[kind] || 'blue'
 
+  const Wrapper = ({ href, ...rest }) => {
+    return href ? (
+      <a target="_blank" rel="noopener noreferrer" href={href} {...rest} />
+    ) : (
+      <div {...rest} />
+    )
+  }
+
   return (
-    <a
+    <Wrapper
       className="text-sm text-gray-500 transition hover:text-gray-600"
-      target="_blank"
-      rel="noopener noreferrer"
-      href={href}
       onMouseEnter={() => lottieRef.current?.play()}
       onMouseLeave={() => lottieRef.current?.stop()}
     >
@@ -57,8 +62,8 @@ const SocialIcon = ({ kind, href, size = 8, animated = true }) => {
           className={`text-gray-700 hover:text-${iconColor}-500 dark:text-gray-200 dark:hover:text-${iconColor}-400 h-${size} w-${size}`}
         />
       )}
-    </a>
+    </Wrapper>
   )
 }
 
-export default SocialIcon
+export default Icon
