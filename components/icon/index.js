@@ -13,9 +13,9 @@ const components = {
 }
 
 const hoverColors = {
-  github: 'blue',
-  linkedin: 'blue',
-  twitter: 'blue',
+  github: 'primary',
+  linkedin: 'primary',
+  twitter: 'primary',
 }
 
 const Icon = ({ kind, href, size = 8, animated = true }) => {
@@ -44,7 +44,8 @@ const Icon = ({ kind, href, size = 8, animated = true }) => {
 
   return (
     <Wrapper
-      className="text-sm text-gray-500 transition hover:text-gray-600"
+      href={href}
+      className="text-sm text-gray-500 transition hover:text-blue-600"
       onMouseEnter={() => lottieRef.current?.play()}
       onMouseLeave={() => lottieRef.current?.stop()}
     >

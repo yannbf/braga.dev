@@ -45,6 +45,15 @@ button {
   stroke: currentColor;
 }
 
+.currentColor:hover path {
+  stroke: #2dd4bf;
+}
+
+.currentColor:hover {
+  transition: transform 0.2s;
+  transform: scale(1.1);
+}
+
 .thick-boi path {
   stroke-width: 17px;
   fill: currentColor;
