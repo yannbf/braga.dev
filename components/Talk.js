@@ -2,7 +2,7 @@ import Link from '@/components/Link'
 import Image from '@/components/Image'
 import formatDate from '@/lib/utils/formatDate'
 
-const Talk = ({ link, thumbnail, date, title, description, location }) => {
+const Talk = ({ link, thumbnail, date, title, tags, location }) => {
   let thumbnailEl = (
     <Link href={link} title={title} className="w-full xl:w-auto">
       <Image
@@ -40,9 +40,11 @@ const Talk = ({ link, thumbnail, date, title, description, location }) => {
               </time>
             </dd>
           </dl>
-          {description && (
+          {tags && (
             <div className="xl:col-span-2 xl:row-span-1">
-              <div className="prose max-w-none text-gray-500 dark:text-gray-400">{description}</div>
+              <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                {tags.map((t) => '#' + t).join(' ')}
+              </div>
             </div>
           )}
         </div>
