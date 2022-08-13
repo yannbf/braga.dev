@@ -6,10 +6,17 @@ import SectionContainer from './SectionContainer'
 import Footer from './Footer'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
+import { useTheme } from 'next-themes'
 
 const LayoutWrapper = ({ children }) => {
+  const { theme, setTheme } = useTheme()
+
   return (
-    <SectionContainer>
+    <SectionContainer
+      onDoubleClick={() => {
+        setTheme(theme === 'light' ? 'dark' : 'light')
+      }}
+    >
       <div className="flex h-screen flex-col justify-between">
         <header className="flex items-center justify-between py-10">
           <div>
