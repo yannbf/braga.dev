@@ -1,10 +1,17 @@
 module.exports = {
-  stories: ['../stories/**/*.stories.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    // Only show demo stories in published storybook
+    {
+      directory: process.env.NODE_ENV === 'development' ? '../' : '../stories',
+    },
+  ],
+  staticDirs: ['../public'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     'storybook-addon-variants',
+    'storybook-addon-next',
   ],
   framework: {
     name: '@storybook/react-webpack5',
