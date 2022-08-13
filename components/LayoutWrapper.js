@@ -14,7 +14,9 @@ const LayoutWrapper = ({ children }) => {
   return (
     <SectionContainer
       onDoubleClick={() => {
-        setTheme(theme === 'light' ? 'dark' : 'light')
+        if (/Mobi/i.test(window.navigator.userAgent)) {
+          setTheme(theme === 'light' ? 'dark' : 'light')
+        }
       }}
     >
       <div className="flex h-screen flex-col justify-between">
