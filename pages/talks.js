@@ -1,7 +1,7 @@
 import siteMetadata from '@/data/siteMetadata'
 import talksData from '@/data/talksData'
 import { PageSEO } from '@/components/SEO'
-import Talk from '@/components/Talk'
+import TalkList from '@/components/TalkList'
 
 export default function Projects() {
   return (
@@ -17,15 +17,7 @@ export default function Projects() {
           </p>
         </div>
         <div className="container py-12">
-          <div className="-m-4 flex flex-wrap">
-            <ul>
-              {talksData.map((talk) => (
-                <li key={talk.title} className="py-4">
-                  <Talk {...talk} />
-                </li>
-              ))}
-            </ul>
-          </div>
+          <TalkList talks={talksData} />
         </div>
       </div>
     </>

@@ -1,55 +1,38 @@
 import Link from '@/components/Link'
 import Image from '@/components/Image'
-import formatDate from '@/lib/utils/formatDate'
 
-const Talk = ({ link, thumbnail, date, title, tags, location }) => {
+const Talk = ({ link, thumbnail, title, tags, location }) => {
   let thumbnailEl = (
-    <Link href={link} title={title} className="w-full xl:w-auto">
-      <Image
-        alt="illustration"
-        className="rounded object-cover"
-        src={`/static/images/talks/${thumbnail}`}
-        layout="responsive"
-        width={640}
-        height={400}
-      />
-    </Link>
+    <Image
+      alt="illustration"
+      className="w-full object-cover object-center md:h-36 lg:h-48"
+      src={`/static/images/talks/${thumbnail}`}
+      layout="responsive"
+      width={640}
+      height={400}
+    />
   )
 
   return (
-    <article className="hover-scale">
-      <div className="grid gap-2 space-y-2 xl:grid-flow-col xl:grid-cols-4 xl:grid-rows-2 xl:gap-4 xl:space-y-0">
-        {thumbnail && <div className="xl:row-span-2">{thumbnailEl}</div>}
-        <div className="order-first space-y-6 xl:order-none xl:col-span-2">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                <Link href={link} className="text-gray-900 dark:text-gray-100">
-                  {title}
-                </Link>
-              </h2>
+    <Link href={link} title={title} className="hover-scale">
+      <div className="border-1 h-full overflow-hidden rounded-2xl border-gray-200 border-opacity-20 bg-white shadow-lg shadow-gray-400/20 dark:bg-gray-800 dark:shadow-gray-800/20">
+        {thumbnailEl}
+
+        <div className="p-4">
+          <div className="title-font mb-1 text-xs font-bold uppercase tracking-widest text-primary-400">
+            {tags.map((t) => '#' + t).join(' ')}
+          </div>
+          <h2 className="title-font mb-3 text-lg font-medium text-gray-900 dark:text-gray-100">
+            {title}
+          </h2>
+          <div className="flex flex-wrap items-center ">
+            <div className="text-gray-500  md:mb-2 lg:mb-0">
+              <p className="inline-flex items-center dark:text-gray-400">{location}</p>
             </div>
           </div>
         </div>
-        <div className="space-y-5 xl:col-span-3">
-          <dl>
-            <dt className="sr-only">Given on</dt>
-            <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-              <time dateTime={date}>
-                {formatDate(date)} ⋅ {location}
-              </time>
-            </dd>
-          </dl>
-          {tags && (
-            <div className="xl:col-span-2 xl:row-span-1">
-              <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                {tags.map((t) => '#' + t).join(' ')}
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-    </article>
+    </Link>
   )
 }
 
