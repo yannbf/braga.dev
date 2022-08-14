@@ -2,7 +2,7 @@ module.exports = {
   stories: [
     // Only show demo stories in published storybook
     {
-      directory: process.env.NODE_ENV === 'development' ? '../' : '../stories',
+      directory: process.env.NODE_ENV === 'development' ? '../components' : '../stories',
     },
   ],
   staticDirs: ['../public'],
@@ -16,5 +16,8 @@ module.exports = {
   framework: {
     name: '@storybook/react-webpack5',
     options: {},
+  },
+  docs: {
+    docsPage: false,
   },
 }
