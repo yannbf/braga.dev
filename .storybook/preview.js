@@ -11,21 +11,28 @@ export const parameters = {
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
-  const defaultDirection = 'rtl'
+  const defaultDirection = 'ltr'
   const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
 
-  if (textDirection === 'all') {
-    const gridStyles = {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(0px, 1fr))',
-      height: '100vh',
+  if (textDirection === 'side-by-side' || textDirection === 'stacked') {
+    const isStacked = textDirection === 'stacked'
+    const styles = {
+      grid: {
+        display: 'grid',
+        gridTemplateColumns: isStacked ? '1fr' : 'repeat(auto-fit, minmax(0px, 1fr))',
+        height: isStacked ? 'auto' : '100vh',
+      },
+      gridItem: {
+        outline: '1px solid #eee',
+      },
     }
+
     return (
-      <div style={gridStyles}>
-        <div style={{ borderRight: '1px solid #ccc' }}>
+      <div style={styles.grid}>
+        <div style={styles.gridItem}>
           <StoryFn />
         </div>
-        <div dir="rtl">
+        <div style={styles.gridItem} dir="rtl">
           <StoryFn />
         </div>
       </div>
@@ -58,8 +65,23 @@ export const globalTypes = {
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
         { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
-        { value: 'all', icon: 'transfer', title: 'both' },
+        { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
+        { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
       ],
+      shortcuts: {
+        next: {
+          label: 'Go to next reading mode',
+          keys: ['shift', 'R'],
+        },
+        previous: {
+          label: 'Go to previous reading mode',
+          keys: ['R'],
+        },
+        reset: {
+          label: 'Reset reading mode',
+          keys: ['control', 'R'],
+        },
+      },
     },
   },
 }

@@ -6,7 +6,7 @@ tags: ['storybook', 'tutorial', 'storybook fundamentals']
 draft: false
 images: ['/static/images/addon-like-experience/banner.png']
 summary: 'Bringing your Storybook to the next level with simple steps'
-readTime: 10
+readTime: '10-12'
 ---
 
 Whenever using Storybook, you might face a situation where you want to support certain functionality for your stories, such as internationalization, theming, right to left mode etc.
@@ -220,7 +220,7 @@ export const globalTypes = {
   textDirection: {
     name: 'Text direction',
     description: 'Direction of the text',
-    defaultValue: 'ltr',
+    defaultValue: 'rtl',
     toolbar: {
       // See this link for the list of available icons that you can use:
       // link[10:101] https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
@@ -315,9 +315,9 @@ const withRTL = (StoryFn, context) => {
 
 ## Bonus: Rendering both modes at the same time
 
-Sometimes you want to visualize things side by side, so they're easy to compare. To make things even more interesting, we can leverage the use of decorators **to render the same story twice**, in a grid, side by side, each one with a different reading mode.
+Sometimes you want to visualize things side by side (or stacked on each other), so they're easy to compare or visualize. To make things even more interesting, we can leverage the use of decorators **to render the same story twice**, in a grid, and apply the necessary styles to position them as we want.
 
-First, we add a new option to `globalTypes` called "both":
+First, we add new options to `globalTypes`, called "side-by-side" and "stacked".
 
 ```jsx .storybook/preview.js
 export const globalTypes = {
@@ -333,15 +333,16 @@ export const globalTypes = {
       items: [
         { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
         { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
-        // mark
-        { value: 'all', icon: 'transfer', title: 'both' },
+        // mark(1,2)
+        { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
+        { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
       ],
     },
   },
 }
 ```
 
-Then, we update the decorator to account the newly added `both` new scenario, rendering the story twice inside of a grid:
+Then, we update the decorator to account the newly added scenarios, rendering the story twice inside of a grid:
 
 ```jsx .storybook/preview.js
 const withRTL = (StoryFn, context) => {
@@ -350,19 +351,26 @@ const withRTL = (StoryFn, context) => {
   const defaultDirection = 'rtl'
   const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
 
-  // mark(1:17)
-  if (textDirection === 'all') {
-    const gridStyles = {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(0px, 1fr))',
-      height: '100vh',
+  // mark(1:24)
+  if (textDirection === 'side-by-side' || textDirection === 'stacked') {
+    const isStacked = textDirection === 'stacked'
+    const styles = {
+      grid: {
+        display: 'grid',
+        gridTemplateColumns: isStacked ? '1fr' : 'repeat(auto-fit, minmax(0px, 1fr))',
+        height: isStacked ? 'auto' : '100vh',
+      },
+      gridItem: {
+        outline: '1px solid #eee',
+      },
     }
+
     return (
-      <div style={gridStyles}>
-        <div style={{ borderRight: '1px solid #ccc' }}>
+      <div style={styles.grid}>
+        <div style={styles.gridItem}>
           <StoryFn />
         </div>
-        <div dir="rtl">
+        <div style={styles.gridItem} dir="rtl">
           <StoryFn />
         </div>
       </div>
@@ -386,7 +394,83 @@ When selecting the new option in the toolbar, we are able to see both the RTL an
 
 ![](/static/images/addon-like-experience/dual-mode.gif)
 
-> 💡 If you want the stories to be on top of each other instead of side by side, you can just tweak the grid styles.
+## Bonus 2: Adding keyboard shortcuts
+
+The addon-toolbars provides a way to set keyboard shortcuts via the `toolbar.shortcuts` property for switching to the next/previous value, or resetting its state. Shortcuts improve both user experience and productivity, so it's pretty cool to know you can achieve that.
+
+```jsx .storybook/preview.js
+export const globalTypes = {
+  textDirection: {
+    name: 'Text direction',
+    description: 'Direction of the text',
+    defaultValue: 'ltr',
+    toolbar: {
+      // See this link for the list of available icons that you can use:
+      // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
+      icon: 'arrowrightalt',
+      items: [
+        { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
+        { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+        { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
+        { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
+      ],
+      // mark(1:14)
+      shortcuts: {
+        next: {
+          label: 'Go to next reading mode',
+          keys: ['shift', 'R'],
+        },
+        previous: {
+          label: 'Go to previous reading mode',
+          keys: ['R'],
+        },
+        reset: {
+          label: 'Reset reading mode',
+          keys: ['control', 'R'],
+        },
+      },
+    },
+  },
+}
+```
+
+Now try it out, it's pretty neat being able to switch modes very quickly. This could work really well for theme switching, for instance.
+
+> 💡 You can check all possible shortcut values in [this file](https://github.com/storybookjs/storybook/blob/next/code/lib/api/src/lib/shortcut.ts#L79).
+
+## Bonus 3: Taking snapshots with Chromatic
+
+If you're using a visual regression testing tool like [Chromatic](https://www.chromatic.com/), you can change the default reading mode in the decorator from `lrt` to `side-by-side` or `stacked` when the story is rendered via Chromatic. This way, you can visualize stories the normal way when accessing Storybook, and have snapshots taken for each and every story in both modes at the same time in Chromatic. Chromatic provides an [isChromatic](https://www.chromatic.com/docs/ischromatic) utility to help with that!
+
+We can then update the decorator:
+
+```jsx .storybook/preview.js
+// mark
+import isChromatic from 'chromatic/isChromatic'
+
+const withRTL = (StoryFn, context) => {
+  const { parameters, globals } = context
+
+  // mark
+  const defaultDirection = isChromatic() ? 'side-by-side' : 'rtl'
+  const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
+  // ... rest of code removed for brevity
+}
+```
+
+And if you don't want to do this for all stories but rather per-story basis, you could use the isChromatic helper in a story parameter:
+
+```jsx Page.stories.jsx
+import isChromatic from 'chromatic/isChromatic'
+
+export const Default = {
+  parameters: {
+    textDirection: isChromatic() ? 'side-by-side' : 'rtl',
+  },
+}
+```
+
+> 💡 While this example uses reading modes, it can be used in conjunction with anything your creativity allows, in fact it works perfectly with multi-theming
 
 ## Final result
 
