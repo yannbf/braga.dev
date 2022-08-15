@@ -4,12 +4,12 @@ import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import { BlogSEO } from '@/components/SEO'
-import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import Comments from '@/components/comments'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
 const editUrl = (fileName) => `${siteMetadata.siteRepo}/blob/main/data/blog/${fileName}`
@@ -20,10 +20,18 @@ const discussUrl = (slug) =>
 
 const postDateTemplate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
-export default function PostLayout({ frontMatter, authorDetails, next, prev, children }) {
+export default function PostLayout({
+  frontMatter,
+  authorDetails,
+  next,
+  prev,
+  columnLayout = false,
+  children,
+}) {
   const { slug, fileName, date, title, images, tags, readingTime, readTime } = frontMatter
   const readingTimeText = readTime ? `${readTime} min read` : readingTime.text
   const { theme, resolvedTheme } = useTheme()
+  const router = useRouter()
 
   const progressBarColor = useMemo(() => {
     if (theme === 'dark' || resolvedTheme === 'dark') {
@@ -31,6 +39,8 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
     }
     return '#fe3d7a'
   }, [theme, resolvedTheme])
+
+  const columns = router.query.columns || columnLayout
 
   return (
     <SectionContainer>
@@ -45,9 +55,9 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
-          <header className="pt-6 xl:pb-6">
-            <div className="space-y-1 text-center">
-              <dl className="space-y-10">
+          <header>
+            <div className="space-y-2 border-b border-gray-200 pb-3 text-center dark:border-gray-700">
+              <dl>
                 <div>
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
@@ -60,10 +70,16 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
               <div>
                 <PageTitle>{title}</PageTitle>
               </div>
+              <div className="pt-2 pb-1">
+                {'⏳'}
+                <span>{readingTimeText}</span>
+              </div>
             </div>
           </header>
           <div
-            className="divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0"
+            className={`divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:divide-y-0 ${
+              columns ? 'xl:grid xl:grid-cols-4 xl:gap-x-6' : ''
+            }`}
             style={{ gridTemplateRows: 'auto 1fr' }}
           >
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
