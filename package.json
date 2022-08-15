@@ -12,7 +12,8 @@
     "prepare": "husky install",
     "storybook": "npx storybook dev -p 6006",
     "build-storybook": "npx storybook build",
-    "build-all": "yarn build-next && yarn build-storybook -o .next/static/storybook"
+    "storybook-blog": "yarn storybook --config-dir .storybook-blog",
+    "build-storybook-blog": "npx storybook build --config-dir .storybook-blog"
   },
   "dependencies": {
     "@code-hike/mdx": "^0.7.3",

@@ -1,8 +1,7 @@
 module.exports = {
   stories: [
-    // Only show demo stories in published storybook
     {
-      directory: '../stories',
+      directory: '../components',
     },
   ],
   staticDirs: ['../public'],

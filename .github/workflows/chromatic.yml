@@ -11,8 +11,14 @@ jobs:
           fetch-depth: 0 # Required to retrieve git history
       - name: Install dependencies
         run: yarn
-      - name: Publish to Chromatic
+      - name: Publish showcase to Chromatic
         uses: chromaui/action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      - name: Publish blog to Chromatic
+        uses: chromaui/action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_BLOG }}
+          buildScriptName: "build-storybook-blog"
