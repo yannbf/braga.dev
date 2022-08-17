@@ -1,3 +1,5 @@
+import { withTheme } from './withTheme'
+
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
@@ -51,8 +53,6 @@ const withRTL = (StoryFn, context) => {
   return <StoryFn />
 }
 
-export const decorators = [withRTL]
-
 export const globalTypes = {
   textDirection: {
     name: 'Text direction',
@@ -84,4 +84,39 @@ export const globalTypes = {
       },
     },
   },
+  theme: {
+    name: 'Theme',
+    description: 'Set the color theme',
+    defaultValue: 'light',
+    toolbar: {
+      dynamicTitle: true,
+      // See this link for the list of available icons that you can use:
+      // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
+      items: [
+        { value: 'light', right: '⚪️', title: 'Light' },
+        { value: 'dark', right: '⚫️', title: 'Dark' },
+        { value: 'acqua', right: '🔵', title: 'Acqua' },
+        { value: 'fira', right: '🔴', title: 'Fira' },
+        { value: 'terra', right: '🟠', title: 'Terra' },
+        { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
+        { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
+      ],
+      shortcuts: {
+        next: {
+          label: 'Go to next reading mode',
+          keys: ['shift', 'W'],
+        },
+        previous: {
+          label: 'Go to previous reading mode',
+          keys: ['W'],
+        },
+        reset: {
+          label: 'Reset reading mode',
+          keys: ['control', 'W'],
+        },
+      },
+    },
+  },
 }
+
+export const decorators = [withTheme, withRTL]

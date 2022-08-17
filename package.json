@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@code-hike/mdx": "^0.7.3",
+    "@emotion/react": "^11.10.0",
     "@fontsource/inter": "4.5.2",
     "@mailchimp/mailchimp_marketing": "^3.0.58",
     "@tailwindcss/forms": "^0.5.2",
