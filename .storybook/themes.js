@@ -10,7 +10,7 @@ export const appThemes = {
     text: '#fff',
     backgrounds: {
       app: '#000',
-      card: 'linear-gradient(to bottom right, #fff, #ccc)',
+      card: 'linear-gradient(to bottom right, #252525, #4a4a4a)',
     },
   },
   acqua: {
