@@ -15,7 +15,7 @@ export const Card = () => {
 
   return (
     <div style={cardStyles}>
-      <div style={{ padding: 10 }}>
+      <div style={{ padding: 30 }}>
         <h2>Card Title</h2>
         <p>
           Lucas ipsum dolor sit amet fett utapau aayla sith c-3p0 moff ventress mustafar windu

@@ -17,7 +17,7 @@ export const appThemes = {
     text: '#fff',
     backgrounds: {
       app: '#004cb2',
-      card: 'linear-gradient(to bottom right, #00bfad, #bba3d4)',
+      card: 'linear-gradient(to bottom right, #00bfad, #99a3d4)',
     },
   },
   fira: {
