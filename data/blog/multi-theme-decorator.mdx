@@ -104,13 +104,13 @@ export const Primary = {}
 
 Once we open the story in Storybook, the component throws an error:
 
-![](/public/static/images/multi-theme-decorator/theme-errors.png)
+![Theme error](/static/images/multi-theme-decorator/theme-errors.png)
 
-That makes sense. As the component renders in isolation, it needs a ThemeProvider with the themes for the `useTheme` hook to work. Normally in an application, that is available higher in the tree. In Storybook, however, that should be provided via a decorator.
+That makes sense. As the component renders in isolation, it needs to be wrapped in a `ThemeProvider` from emotion, so that the `useTheme` hook works. Normally in an application, that is available higher in the tree, like in `App.jsx`. In Storybook, however, that should be provided via a decorator.
 
 ## Creating the theme decorator
 
-The first step is to actually add support for themes in Storybook. Let's start simple and create a `withTheme` decorator which wraps the story with a hardcoded `dark` theme, and also overrides the styles of `body` to use the app background color:
+The first step is to add support for themes in Storybook. Let's start simple and create a `withTheme` decorator which wraps the story in a `ThemeProvider` passing a hardcoded `dark` theme, and also overrides the styles of `body` to use the app background color:
 
 ```jsx .storybook/preview.js
 import { Global, ThemeProvider, css } from '@emotion/react'
@@ -135,7 +135,7 @@ export const withTheme = (StoryFn) => {
 
 Now the story does not error anymore, and looks pretty good:
 
-![](/public/static/images/multi-theme-decorator/with-dark-theme.png)
+![With dark theme](/static/images/multi-theme-decorator/with-dark-theme.png)
 
 ## Creating a toolbar button to switch themes
 
@@ -211,7 +211,7 @@ export const withTheme = (StoryFn, context) => {
 
 Now you can play around with the newly added theme toolbar button, which already gives an amazing experience. The last two options (side-by-side and stacked) don't work yet, we'll get there soon.
 
-![](/public/static/images/multi-theme-decorator/theme-picker.gif)
+![Theme picker in the toolbar](/static/images/multi-theme-decorator/theme-picker.gif)
 
 You can also set specific themes to stories by using the `theme` parameter.
 
@@ -299,7 +299,7 @@ export const AllThemes = {
 }
 ```
 
-2. You can change the `defaultTheme` in the decorator logic by leveraging the [isChromatic](https://www.chromatic.com/docs/ischromatic#check-for-chromatic) helper, which will return true only when Chromatic is capturing a snapshot. This way every component you have will have its snapshot taken in all themes:
+2. You can change the `defaultTheme` in the decorator logic by leveraging the [isChromatic](https://www.chromatic.com/docs/ischromatic#check-for-chromatic) helper, which will return true only when Chromatic is capturing a snapshot. This way every component you have will render in a default theme in Storybook, but will have its snapshot taken in all themes at the same time in Chromatic:
 
 ```jsx .storybook/preview.js
 // mark
