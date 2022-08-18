@@ -317,6 +317,14 @@ export const withTheme = (StoryFn, context) => {
 
 > ⚠️ It's very tricky to do things like that globally, which could be problematic if you have components that have absolute positioning or use the play function, so be aware. You can always set this to apply to every story, but pass `parameters.theme` to a story that should not display in stacked mode by default in Chromatic.
 
+Once you do either of these, and eventually make changes to your component, Chromatic will pick them up you can see how they are reflected in all theme variants. This is really important because you might make a change that impacts all themes, like so:
+
+![Change picked up by all themes in Chromatic](/static/images/multi-theme-decorator/change-all-themes-chromatic.gif)
+
+But you can also make a change that only impacts a single theme, which could easily go unnoticed. Here's an example of a change in dark theme, of which Chromatic detected and notified:
+
+![Change in dark theme picked up by Chromatic](/static/images/multi-theme-decorator/single-theme-change-chromatic.gif)
+
 ## Final result
 
 You can find the code for the decorator in [this repo](https://github.com/yannbf/braga.dev/blob/main/.storybook/withTheme.js), and here's a live embed so you can play around with the real thing:
@@ -329,3 +337,9 @@ You can find the code for the decorator in [this repo](https://github.com/yannbf
   frameBorder="0"
   className="shadow-lg shadow-gray-400/20 dark:shadow-gray-800/20"
 />
+
+## Conclusion
+
+Thanks for reading!
+
+When thinking about working with multiple teams, designers, etc. It's quite easy to just keep pushing changes without realizing the impact of them. Combining the power of Storybook and Chromatic is a great companion to give your team better opportunities for collaboration but also confidence when changing your code, making sure you don't end up with visual regressions!
