@@ -10,7 +10,7 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    // 'storybook-addon-variants',
+    'storybook-addon-variants',
     'storybook-addon-next',
   ],
   framework: {
