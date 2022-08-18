@@ -13,7 +13,8 @@
     "storybook": "npx storybook dev -p 6006",
     "build-storybook": "npx storybook build",
     "storybook-blog": "yarn storybook --config-dir .storybook-blog",
-    "build-storybook-blog": "npx storybook build --config-dir .storybook-blog"
+    "build-storybook-blog": "npx storybook build --config-dir .storybook-blog",
+    "chromatic": "npx chromatic "
   },
   "dependencies": {
     "@code-hike/mdx": "^0.7.3",
@@ -90,5 +91,7 @@
     "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
       "prettier --write"
     ]
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "yannbraga.dev@0.0.0"
 }

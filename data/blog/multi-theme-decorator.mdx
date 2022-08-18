@@ -1,0 +1,330 @@
+---
+title: 'Adding multi theme support to Storybook and React'
+date: '2022-08-18'
+tags: ['storybook', 'tutorial', 'recipe', 'react']
+draft: false
+images: ['/static/images/multi-theme-decorator/banner.png']
+summary: 'And using that for a perfect snapshot experience'
+---
+
+![All themes](/static/images/multi-theme-decorator/all-themes.png)
+
+Storybook is a great tool to work on components in isolation and view all their possible states. If you're working on components that contain multiple themes (dark, light, high contrast, sepia, etc..), then Storybook is definitely the perfect tool to easily see your components in all these themes. In this tutorial, I'll show you how to provide theme support, be able to set them via globals and parameters, and how to leverage that to create a perfect snapshot experience with [Chromatic](https://chromatic.com).
+
+## Getting things ready
+
+In the [previous blog post](./addon-like-experience), I explained in detail how to create a decorator to add support for whatever you need, using text direction as an example. I'll be using the same strategy, but for theming in the context of React applications, using jsx-styled based solutions. This will be more straight forward, so please refer to the previous tutorial if you want the details.
+
+## Creating the themes
+
+In this recipe, we'll be creating a decorator for [emotion](https://emotion.sh/) based themes. This should work perfectly for any jsx-styled based solution, you just have to change the syntax a little bit.
+
+Let's create 5 themes for our application in a `themes.js` file:
+
+```js themes.js
+export const appThemes = {
+  light: {
+    primary: '#333',
+    appBackground: '#fff',
+    cardBackground: 'linear-gradient(to bottom right, #fff, #fff)',
+  },
+  dark: {
+    primary: '#fff',
+    appBackground: '#000',
+    cardBackground: 'linear-gradient(to bottom right, #252525, #4a4a4a)',
+  },
+  acqua: {
+    primary: '#fff',
+    appBackground: '#004cb2',
+    cardBackground: 'linear-gradient(to bottom right, #00bfad, #99a3d4)',
+  },
+  fira: {
+    primary: '#fff',
+    secondary: '#f500bb',
+    appBackground: '#cc3131',
+    cardBackground: 'linear-gradient(to bottom right, #ec407b, #ff7d94)',
+  },
+  terra: {
+    primary: '#fff',
+    appBackground: '#585858',
+    cardBackground: 'linear-gradient(to right bottom, rgb(177 71 71), rgb(255 212 125))',
+  },
+}
+```
+
+## Creating a themed component
+
+Let's use a `Card` component to showcase the themes. It leverages the themes and the `useTheme` hook from emotion to display different text and background colors, based on different themes. Let's also create the stories file for that component:
+
+<CH.Code>
+
+```jsx Card.jsx
+import React from 'react'
+import { useTheme } from '@emotion/react'
+
+export const Card = () => {
+  const theme = useTheme()
+  const cardStyles = {
+    backgroundImage: theme.cardBackground,
+    color: theme.primary,
+    maxWidth: 300,
+    borderRadius: 8,
+    boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.3)',
+    fontFamily: 'Verdana',
+    lineHeight: 1.6,
+  }
+
+  return (
+    <div style={cardStyles}>
+      <div style={{ padding: 30 }}>
+        <h2>Card Title</h2>
+        <p>
+          Lucas ipsum dolor sit amet fett utapau aayla sith c-3p0 moff ventress mustafar windu
+          ponda. Moff darth hutt hutt kessel. Bothan moff chewbacca yavin hoth ackbar kit ewok mace.
+        </p>
+      </div>
+    </div>
+  )
+}
+```
+
+```jsx Card.stories.jsx
+import { Card } from './Card'
+
+export default {
+  title: 'Themed/Card',
+  component: Card,
+}
+
+export const Primary = {}
+```
+
+</CH.Code>
+
+Once we open the story in Storybook, the component throws an error:
+
+![](/public/static/images/multi-theme-decorator/theme-errors.png)
+
+That makes sense. As the component renders in isolation, it needs a ThemeProvider with the themes for the `useTheme` hook to work. Normally in an application, that is available higher in the tree. In Storybook, however, that should be provided via a decorator.
+
+## Creating the theme decorator
+
+The first step is to actually add support for themes in Storybook. Let's start simple and create a `withTheme` decorator which wraps the story with a hardcoded `dark` theme, and also overrides the styles of `body` to use the app background color:
+
+```jsx .storybook/preview.js
+import { Global, ThemeProvider, css } from '@emotion/react'
+import { appThemes } from './themes'
+
+export const withTheme = (StoryFn) => {
+  return (
+    <ThemeProvider theme={appThemes.dark}>
+      <Global
+        styles={css`
+          body {
+            // override body styles to get a matching background color
+            background: ${appThemes.dark.backgrounds.app};
+          }
+        `}
+      />
+      <StoryFn />
+    </ThemeProvider>
+  )
+}
+```
+
+Now the story does not error anymore, and looks pretty good:
+
+![](/public/static/images/multi-theme-decorator/with-dark-theme.png)
+
+## Creating a toolbar button to switch themes
+
+Awesome. Now it's time to add the toolbars. Let's add `globalTypes` to the `.storybook/preview.js` file:
+
+```jsx .storybook/preview.js
+export const globalTypes = {
+  theme: {
+    name: 'Theme',
+    description: 'Set the color theme',
+    defaultValue: 'light',
+    toolbar: {
+      // show the theme name once selected in the toolbar
+      dynamicTitle: true,
+      items: [
+        { value: 'light', right: '⚪️', title: 'Light' },
+        { value: 'dark', right: '⚫️', title: 'Dark' },
+        { value: 'acqua', right: '🔵', title: 'Acqua' },
+        { value: 'fira', right: '🔴', title: 'Fira' },
+        { value: 'terra', right: '🟠', title: 'Terra' },
+        { value: 'side-by-side', icon: 'sidebaralt', title: 'all side by side' },
+        { value: 'stacked', icon: 'bottombar', title: 'all stacked' },
+      ],
+    },
+  },
+}
+```
+
+## Updating the decorator to use globals and parameters
+
+Let's define the API for the parameters, which should be pretty simple:
+
+```js
+export const MyStory = {
+  parameters: {
+    // Any of these options. If none are provided, the default is used (light)
+    theme: 'light' | 'dark' | 'acqua' | 'fira' | 'terra', 'side-by-side' | 'stacked',
+  }
+}
+```
+
+And now you can update the decorator to get the values from either parameters or globals, rather than a hardcoded theme:
+
+```jsx .storybook/preview.js
+import { Global, ThemeProvider, css } from '@emotion/react'
+import { appThemes } from './themes'
+
+export const withTheme = (StoryFn, context) => {
+  // mark(1:7)
+  const { parameters, globals } = context
+
+  const defaultTheme = 'light'
+  const theme = parameters.theme || globals.theme || defaultTheme
+
+  const selectedTheme = appThemes[theme]
+  return (
+    // mark
+    <ThemeProvider theme={selectedTheme}>
+      <Global
+        styles={css`
+          body {
+            // override body styles to get a matching background color
+            // mark
+            background: ${selectedTheme.backgrounds.app};
+          }
+        `}
+      />
+      <StoryFn />
+    </ThemeProvider>
+  )
+}
+```
+
+Now you can play around with the newly added theme toolbar button, which already gives an amazing experience. The last two options (side-by-side and stacked) don't work yet, we'll get there soon.
+
+![](/public/static/images/multi-theme-decorator/theme-picker.gif)
+
+You can also set specific themes to stories by using the `theme` parameter.
+
+## Seeing multiple themes at the same time
+
+To make things even beter, let's change the `withTheme` decorator to add a side-by-side/stacked view, where it iterates over every available theme and renders them together inside of a grid:
+
+```jsx .storybook/preview.js
+import { Global, ThemeProvider, css } from '@emotion/react'
+import { appThemes } from './themes'
+
+export const withTheme = (StoryFn, context) => {
+  // mark(1:38)
+  const { parameters, globals } = context
+
+  const defaultTheme = 'light'
+  const theme = parameters.theme || globals.theme || defaultTheme
+
+  if (theme === 'side-by-side' || theme === 'stacked') {
+    const isStacked = theme === 'stacked'
+    const styles = {
+      grid: {
+        display: 'grid',
+        gridTemplateColumns: isStacked ? '1fr' : 'repeat(auto-fit, minmax(0px, 1fr))',
+        height: isStacked ? 'auto' : '100vh',
+      },
+      gridItem: {
+        outline: '1px solid #eee',
+      },
+    }
+
+    return (
+      <div style={styles.grid}>
+        <Global
+          styles={css`
+            body {
+              // remove body padding for grid view and add padding in grid item instead
+              padding: 0px !important;
+            }
+          `}
+        />
+        {Object.values(appThemes).map((tm) => (
+          <ThemeProvider theme={tm}>
+            <div style={{ padding: '1rem', background: tm.backgrounds.app }}>
+              <StoryFn />
+            </div>
+          </ThemeProvider>
+        ))}
+      </div>
+    )
+  }
+
+  const selectedTheme = appThemes[theme]
+  return (
+    <ThemeProvider theme={selectedTheme}>
+      <Global
+        styles={css`
+          body {
+            // override body styles to get a matching background color
+            background: ${selectedTheme.backgrounds.app};
+          }
+        `}
+      />
+      <StoryFn />
+    </ThemeProvider>
+  )
+}
+```
+
+Now you get a very insightful experience, being able to compare different themes side by side. The stacked mode is great for larger components, such as pages, so that you don't end up squeezing the content too much.
+
+![Multi themes side by side](/static/images/multi-theme-decorator/stacked-modes.gif)
+
+# Leveraging Chromatic for snapshot testing
+
+Now that you have the right tools to render a component in multiple themes, you can easily snapshot all of them with Chromatic! There are a couple of ways to do so:
+
+1. You can add a parameter to your story that will render the component in all themes like so:
+
+```jsx .storybook/preview.js
+export const AllThemes = {
+  parameters: {
+    theme: 'stacked',
+  },
+}
+```
+
+2. You can change the `defaultTheme` in the decorator logic by leveraging the [isChromatic](https://www.chromatic.com/docs/ischromatic#check-for-chromatic) helper, which will return true only when Chromatic is capturing a snapshot. This way every component you have will have its snapshot taken in all themes:
+
+```jsx .storybook/preview.js
+// mark
+import isChromatic from 'chromatic/isChromatic'
+
+export const withTheme = (StoryFn, context) => {
+  const { parameters, globals } = context
+
+  // mark
+  const defaultTheme = isChromatic() ? 'stacked' : 'light'
+  const theme = parameters.theme || globals.theme || defaultTheme
+  // ... the rest of the code remains the same
+}
+```
+
+> ⚠️ It's very tricky to do things like that globally, which could be problematic if you have components that have absolute positioning or use the play function, so be aware. You can always set this to apply to every story, but pass `parameters.theme` to a story that should not display in stacked mode by default in Chromatic.
+
+## Final result
+
+You can find the code for the decorator in [this repo](https://github.com/yannbf/braga.dev/blob/main/.storybook/withTheme.js), and here's a live embed so you can play around with the real thing:
+
+<iframe
+  width="100%"
+  height="600"
+  src="https://main--62e6a1f33aafd7bc933a7071.chromatic.com/?path=/story/themed-card--primary&embed=true&full=1&singleStory=true&globals=theme:stacked"
+  title="Story example"
+  frameBorder="0"
+  className="shadow-lg shadow-gray-400/20 dark:shadow-gray-800/20"
+/>

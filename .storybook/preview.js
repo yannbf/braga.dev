@@ -54,36 +54,36 @@ const withRTL = (StoryFn, context) => {
 }
 
 export const globalTypes = {
-  textDirection: {
-    name: 'Text direction',
-    description: 'Direction of the text',
-    defaultValue: 'ltr',
-    toolbar: {
-      // See this link for the list of available icons that you can use:
-      // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
-      icon: 'arrowrightalt',
-      items: [
-        { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
-        { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
-        { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
-        { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
-      ],
-      shortcuts: {
-        next: {
-          label: 'Go to next reading mode',
-          keys: ['shift', 'R'],
-        },
-        previous: {
-          label: 'Go to previous reading mode',
-          keys: ['R'],
-        },
-        reset: {
-          label: 'Reset reading mode',
-          keys: ['control', 'R'],
-        },
-      },
-    },
-  },
+  // textDirection: {
+  //   name: 'Text direction',
+  //   description: 'Direction of the text',
+  //   defaultValue: 'ltr',
+  //   toolbar: {
+  //     // See this link for the list of available icons that you can use:
+  //     // https://storybook.js.org/docs/react/faq#what-icons-are-available-for-my-toolbar-or-my-addon
+  //     icon: 'arrowrightalt',
+  //     items: [
+  //       { value: 'ltr', icon: 'arrowrightalt', title: 'left to right' },
+  //       { value: 'rtl', icon: 'arrowleftalt', title: 'right to left' },
+  //       { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
+  //       { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
+  //     ],
+  //     shortcuts: {
+  //       next: {
+  //         label: 'Go to next reading mode',
+  //         keys: ['shift', 'R'],
+  //       },
+  //       previous: {
+  //         label: 'Go to previous reading mode',
+  //         keys: ['R'],
+  //       },
+  //       reset: {
+  //         label: 'Reset reading mode',
+  //         keys: ['control', 'R'],
+  //       },
+  //     },
+  //   },
+  // },
   theme: {
     name: 'Theme',
     description: 'Set the color theme',
@@ -98,8 +98,8 @@ export const globalTypes = {
         { value: 'acqua', right: '🔵', title: 'Acqua' },
         { value: 'fira', right: '🔴', title: 'Fira' },
         { value: 'terra', right: '🟠', title: 'Terra' },
-        { value: 'side-by-side', icon: 'sidebaralt', title: 'both side by side' },
-        { value: 'stacked', icon: 'bottombar', title: 'both stacked' },
+        { value: 'side-by-side', icon: 'sidebaralt', title: 'all side by side' },
+        { value: 'stacked', icon: 'bottombar', title: 'all stacked' },
       ],
       shortcuts: {
         next: {

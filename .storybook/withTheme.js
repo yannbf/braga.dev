@@ -1,33 +1,5 @@
 import { Global, ThemeProvider, css } from '@emotion/react'
-
-const allThemes = {
-  light: {
-    primary: '#333',
-    appBackground: '#fff',
-    cardBackground: 'linear-gradient(to bottom right, #fff, #fff)',
-  },
-  dark: {
-    primary: '#fff',
-    appBackground: '#000',
-    cardBackground: 'linear-gradient(to bottom right, #252525, #4a4a4a)',
-  },
-  acqua: {
-    primary: '#fff',
-    appBackground: '#004cb2',
-    cardBackground: 'linear-gradient(to bottom right, #00bfad, #99a3d4)',
-  },
-  fira: {
-    primary: '#fff',
-    secondary: '#f500bb',
-    appBackground: '#cc3131',
-    cardBackground: 'linear-gradient(to bottom right, #ec407b, #ff7d94)',
-  },
-  terra: {
-    primary: '#fff',
-    appBackground: '#585858',
-    cardBackground: 'linear-gradient(to right bottom, rgb(177 71 71), rgb(255 212 125))',
-  },
-}
+import { appThemes } from './themes'
 
 export const withTheme = (StoryFn, context) => {
   const { parameters, globals } = context
@@ -53,13 +25,14 @@ export const withTheme = (StoryFn, context) => {
         <Global
           styles={css`
             body {
+              // remove body padding for grid view and add padding in grid item instead
               padding: 0px !important;
             }
           `}
         />
-        {Object.values(allThemes).map((tm) => (
+        {Object.values(appThemes).map((tm) => (
           <ThemeProvider theme={tm}>
-            <div style={{ padding: '1rem', background: tm.appBackground }}>
+            <div style={{ padding: '1rem', background: tm.backgrounds.app }}>
               <StoryFn />
             </div>
           </ThemeProvider>
@@ -68,13 +41,14 @@ export const withTheme = (StoryFn, context) => {
     )
   }
 
-  const selectedTheme = allThemes[theme]
+  const selectedTheme = appThemes[theme]
   return (
     <ThemeProvider theme={selectedTheme}>
       <Global
         styles={css`
           body {
-            background: ${selectedTheme.appBackground};
+            // override body styles to get a matching background color
+            background: ${selectedTheme.backgrounds.app};
           }
         `}
       />

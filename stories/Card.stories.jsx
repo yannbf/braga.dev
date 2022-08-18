@@ -5,4 +5,8 @@ export default {
   component: Card,
 }
 
-export const Primary = {}
+export const Primary = {
+  parameters: {
+    theme: 'stacked',
+  },
+}
