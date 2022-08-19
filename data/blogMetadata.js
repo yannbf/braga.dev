@@ -6,6 +6,11 @@ const blogPosts = [
     tags: ['storybook', 'tutorial', 'storybook fundamentals'],
     slug: 'addon-like-experience',
   },
+  {
+    title: 'Adding multi theme support to Storybook and React',
+    tags: ['storybook', 'tutorial', 'recipe', 'react'],
+    slug: 'multi-theme-decorator',
+  },
 ]
 
 export default blogPosts
