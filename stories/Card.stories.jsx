@@ -1,4 +1,5 @@
 import { Card } from './Card'
+import isChromatic from 'chromatic/isChromatic'
 
 export default {
   title: 'Themed/Card',
@@ -7,6 +8,6 @@ export default {
 
 export const Primary = {
   parameters: {
-    theme: 'stacked',
+    theme: isChromatic() ? 'stacked' : 'light',
   },
 }
