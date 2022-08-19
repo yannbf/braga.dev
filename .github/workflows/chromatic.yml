@@ -14,11 +14,13 @@ jobs:
       - name: Publish showcase to Chromatic
         uses: chromaui/action@v1
         with:
+          onlyChanged: true
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       - name: Publish blog to Chromatic
         uses: chromaui/action@v1
         with:
+          onlyChanged: true
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_BLOG }}
           buildScriptName: "build-storybook-blog"

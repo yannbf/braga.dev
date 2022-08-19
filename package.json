@@ -14,7 +14,7 @@
     "build-storybook": "npx storybook build",
     "storybook-blog": "yarn storybook --config-dir .storybook-blog",
     "build-storybook-blog": "npx storybook build --config-dir .storybook-blog",
-    "chromatic": "npx chromatic "
+    "chromatic": "npx chromatic --exit-zero-on-changes --only-changed"
   },
   "dependencies": {
     "@code-hike/mdx": "^0.7.3",
