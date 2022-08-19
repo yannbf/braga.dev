@@ -63,6 +63,7 @@ const CommandPalette = ({ children, blogPosts }) => {
           keywords: post.tags.join(' '),
           perform: () => router.push(`/blog/${post.slug}`),
           subtitle: '',
+          section: 'Blog posts',
           parent: 'searchBlogAction',
         },
       ]
