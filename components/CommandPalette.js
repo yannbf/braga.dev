@@ -71,48 +71,38 @@ const CommandPalette = ({ children, blogPosts }) => {
     return actions
   }, [blogPosts, router])
 
-  const navigationActions = React.useMemo(() => {
-    const allNavigations = [
-      {
-        id: 'homeAction',
-        name: 'Home',
-        shortcut: ['g', 'h'],
-        keywords: 'back',
-        section: 'Navigation',
-        perform: () => router.push('/'),
-        path: '/',
-        icon: <Icon kind="github" />,
-      },
-      {
-        id: 'talksAction',
-        name: 'Talks',
-        shortcut: ['g', 't'],
-        keywords: 'talk',
-        section: 'Navigation',
-        perform: () => router.push('/talks'),
-        path: '/talks',
-        icon: <Icon kind="github" />,
-      },
-      {
-        id: 'aboutAction',
-        name: 'About me',
-        shortcut: ['g', 'a'],
-        keywords: 'yann about',
-        section: 'Navigation',
-        perform: () => router.push('/about'),
-        path: '/about',
-        icon: <Icon kind="github" />,
-      },
-    ]
-
-    return allNavigations.reduce((acc, curr) => {
-      if (router.pathname !== curr.path) {
-        return [...acc, { ...curr }]
-      }
-
-      return acc
-    }, [])
-  }, [router.asPath])
+  const navigationActions = [
+    {
+      id: 'homeAction',
+      name: 'Home',
+      shortcut: ['g', 'h'],
+      keywords: 'back',
+      section: 'Navigation',
+      perform: () => router.push('/'),
+      path: '/',
+      icon: <Icon kind="github" />,
+    },
+    {
+      id: 'talksAction',
+      name: 'Talks',
+      shortcut: ['g', 't'],
+      keywords: 'talk',
+      section: 'Navigation',
+      perform: () => router.push('/talks'),
+      path: '/talks',
+      icon: <Icon kind="github" />,
+    },
+    {
+      id: 'aboutAction',
+      name: 'About me',
+      shortcut: ['g', 'a'],
+      keywords: 'yann about',
+      section: 'Navigation',
+      perform: () => router.push('/about'),
+      path: '/about',
+      icon: <Icon kind="github" />,
+    },
+  ]
 
   return (
     <KBarProvider
@@ -192,10 +182,22 @@ const CommandPalette = ({ children, blogPosts }) => {
 
 function RenderResults() {
   const { results, rootActionId } = useDeepMatches()
+  const router = useRouter()
+
+  const filteredResults = results.reduce((acc, curr) => {
+    const isCurrentPageNavItem =
+      typeof curr === 'object' && curr.section === 'Navigation' && curr.path === router.pathname
+
+    if (isCurrentPageNavItem) {
+      return acc
+    }
+
+    return acc.concat(curr)
+  }, [])
 
   return (
     <KBarResults
-      items={results}
+      items={filteredResults}
       onRender={({ item, active }) =>
         typeof item === 'string' ? (
           <div style={groupNameStyle}>{item}</div>
