@@ -57,6 +57,8 @@ const Icon = ({ kind, href, size = 8, animated = true }) => {
           animationData={animationData}
           loop={false}
           autoplay={false}
+          width={32}
+          height={32}
         />
       ) : (
         <SocialSvg
