@@ -6,3 +6,4 @@
 - Storybook test runner in depth
 - How to write proper interaction tests in Storybook
 - Storybook for A/B testing
+- Taking snapshot of iframes in Chromatic + play function
