@@ -8,6 +8,6 @@ export default {
 
 export const Primary = {
   parameters: {
-    theme: isChromatic() ? 'stacked' : 'light',
+    theme: isChromatic() ? 'stacked' : undefined,
   },
 }
