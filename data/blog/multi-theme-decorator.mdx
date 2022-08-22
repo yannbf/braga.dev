@@ -16,7 +16,7 @@ Storybook is a great tool to work on components in isolation and view all their 
 
 In the [previous blog post](./addon-like-experience), I explained in detail how to create a decorator to add support for whatever you need, using text direction as an example. I'll be using the same strategy, but for theming in the context of React applications, using jsx-styled based solutions. This will be more straight forward, so please refer to the previous tutorial if you want the details.
 
-## Creating the themes
+### Creating the themes
 
 In this recipe, we'll be creating a decorator for [emotion](https://emotion.sh/) based themes. This should work perfectly for any jsx-styled based solution, you just have to change the syntax a little bit.
 
@@ -53,7 +53,7 @@ export const appThemes = {
 }
 ```
 
-## Creating a themed component
+### Creating a themed component
 
 Let's use a `Card` component to showcase the themes. It leverages the themes and the `useTheme` hook from emotion to display different text and background colors, based on different themes. Let's also create the stories file for that component:
 
@@ -108,7 +108,7 @@ Once we open the story in Storybook, the component throws an error:
 
 That makes sense. As the component renders in isolation, it needs to be wrapped in a `ThemeProvider` from emotion, so that the `useTheme` hook works. Normally in an application, that is available higher in the tree, like in `App.jsx`. In Storybook, however, that should be provided via a decorator.
 
-## Creating the theme decorator
+### Creating the theme decorator
 
 The first step is to add support for themes in Storybook. Let's start simple and create a `withTheme` decorator which wraps the story in a `ThemeProvider` passing a hardcoded `dark` theme, and also overrides the styles of `body` to use the app background color:
 
@@ -137,7 +137,7 @@ Now the story does not error anymore, and looks pretty good:
 
 ![With dark theme](/static/images/multi-theme-decorator/with-dark-theme.png)
 
-## Creating a toolbar button to switch themes
+### Creating a toolbar button to switch themes
 
 Awesome. Now it's time to add the toolbars. Let's add `globalTypes` to the `.storybook/preview.js` file:
 
@@ -285,7 +285,7 @@ Now you get a very insightful experience, being able to compare different themes
 
 ![Multi themes side by side](/static/images/multi-theme-decorator/stacked-modes.gif)
 
-## Leveraging Chromatic for snapshot testing
+### Leveraging Chromatic for snapshot testing
 
 Now that you have the right tools to render a component in multiple themes, you can easily snapshot all of them with Chromatic! There are a couple of ways to do so:
 

@@ -3,14 +3,14 @@ import { useMemo } from 'react'
 import { getMDXComponent } from 'mdx-bundler/client'
 import Image from './Image'
 import CustomLink from './Link'
-import TOCInline from './TOCInline'
+import TableOfContents from './TableOfContents'
 import Pre from './Pre'
 import { BlogNewsletterForm } from './NewsletterForm'
 
 export const MDXComponents = {
   // eslint-disable-next-line jsx-a11y/alt-text
   Image: (props) => <Image placeholder="blur" {...props} />,
-  TOCInline,
+  TableOfContents,
   a: CustomLink,
   pre: Pre,
   BlogNewsletterForm: BlogNewsletterForm,

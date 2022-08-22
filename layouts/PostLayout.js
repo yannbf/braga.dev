@@ -11,6 +11,7 @@ import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+import TableOfContents from '../components/TableOfContents'
 
 const editUrl = (fileName) => `${siteMetadata.siteRepo}/blob/main/data/blog/${fileName}`
 const discussUrl = (slug) =>
@@ -22,10 +23,12 @@ const postDateTemplate = { weekday: 'long', year: 'numeric', month: 'long', day:
 
 export default function PostLayout({
   frontMatter,
+  toc,
   authorDetails,
   next,
   prev,
   columnLayout = false,
+  stickyLayout = false,
   children,
 }) {
   const { slug, fileName, date, title, images, tags, readingTime, readTime } = frontMatter
@@ -40,7 +43,19 @@ export default function PostLayout({
     return '#fe3d7a'
   }, [theme, resolvedTheme])
 
-  const columns = router.query.columns || columnLayout
+  const sticky = router.query.sticky || stickyLayout
+  const columns = router.query.columns || columnLayout || sticky
+
+  const stickyStyles = {
+    top: 0,
+    position: 'sticky',
+    maxHeight: 'calc(100vh - 28px)',
+    overflow: 'auto',
+    paddingBottom: 16,
+    marginLeft: 'auto',
+    marginTop: 4,
+    marginRight: -70,
+  }
 
   return (
     <SectionContainer>
@@ -93,7 +108,12 @@ export default function PostLayout({
               </div>
               <Comments frontMatter={frontMatter} />
             </div>
-            <footer>
+            <footer style={sticky ? stickyStyles : {}} className="md:pl-6">
+              {sticky && (
+                <div className="hidden divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:block">
+                  <TableOfContents toc={toc} />
+                </div>
+              )}
               <div className="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700">
                 {tags && (
                   <div className="py-4 xl:py-8">
