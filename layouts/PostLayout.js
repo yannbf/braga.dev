@@ -28,7 +28,7 @@ export default function PostLayout({
   next,
   prev,
   columnLayout = false,
-  stickyLayout = false,
+  stickyLayout = true,
   children,
 }) {
   const { slug, fileName, date, title, images, tags, readingTime, readTime } = frontMatter
