@@ -43,8 +43,8 @@ export default function PostLayout({
     return '#fe3d7a'
   }, [theme, resolvedTheme])
 
-  const sticky = router.query.sticky || stickyLayout
-  const columns = router.query.columns || columnLayout || sticky
+  const sticky = router.query.sticky ? router.query.sticky === 'true' : stickyLayout
+  const columns = router.query.columns ? router.query.columns === 'true' : columnLayout || sticky
 
   const stickyStyles = {
     top: 0,
