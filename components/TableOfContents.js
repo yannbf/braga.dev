@@ -59,7 +59,6 @@ const TableOfContents = ({
   inline = false,
 }) => {
   const idList = getIds(toc)
-  console.log(idList)
   const activeId = useActiveId(idList)
   const re = Array.isArray(exclude)
     ? new RegExp('^(' + exclude.join('|') + ')$', 'i')
