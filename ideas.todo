@@ -7,3 +7,4 @@
 - How to write proper interaction tests in Storybook
 - Storybook for A/B testing
 - Taking snapshot of iframes in Chromatic + play function
+- Handling complex (non serializable) values as args (mapping feature)
