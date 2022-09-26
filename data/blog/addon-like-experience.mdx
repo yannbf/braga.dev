@@ -305,7 +305,7 @@ const withRTL = (StoryFn, context) => {
   const defaultDirection = 'rtl'
   const textDirection = parameters.textDirection || globals.textDirection || defaultDirection
 
-  // this hook will be called once when the component renders
+  // this hook will be called when the component renders and when the globals change
   useEffect(() => {
     // Set RTL only if passed as a parameter or toggled via toolbar
     document.body.dir = textDirection
