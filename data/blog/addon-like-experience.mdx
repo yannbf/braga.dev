@@ -309,7 +309,7 @@ const withRTL = (StoryFn, context) => {
   useEffect(() => {
     // Set RTL only if passed as a parameter or toggled via toolbar
     document.body.dir = textDirection
-  }, [])
+  }, [textDirection])
 
   return Story()
 }
