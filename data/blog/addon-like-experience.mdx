@@ -294,9 +294,11 @@ As a result, we can toggle the RTL mode in other stories at runtime by using the
 
 _This all sounds super nice, but what if I'm using Storybook with Angular, where I can't wrap components with JSX? Or what if I don't want to change markup, but execute something programmatically?_
 
-Thankfully, changing reading mode can also be done programmatically via the `document.body.dir` property. Storybook provides react-like hooks that can be used in any framework (Angular, Vue, Svelte, etc.), and we can use the `useEffect` hook to apply the reading direction once the component renders:
+Thankfully, changing reading mode can also be done programmatically via the `document.body.dir` property. Storybook's `@storybook/client-api` package provides react-like hooks that can be used in any framework (Angular, Vue, Svelte, etc.), and we can use the `useEffect` hook to apply the reading direction once the component renders:
 
 ```jsx .storybook/preview.js
+import { useEffect } from '@storybook/client-api'
+
 const withRTL = (StoryFn, context) => {
   const { parameters, globals } = context
 
