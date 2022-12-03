@@ -46,6 +46,7 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
                     <Link
                       href={`/blog/${prev.slug}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                      aria-label={`Previous post: ${prev.title}`}
                     >
                       &larr; {prev.title}
                     </Link>
@@ -56,6 +57,7 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
                     <Link
                       href={`/blog/${next.slug}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                      aria-label={`Next post: ${next.title}`}
                     >
                       {next.title} &rarr;
                     </Link>
