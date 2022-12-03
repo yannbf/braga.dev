@@ -2,21 +2,26 @@ import React from 'react'
 
 import { Header } from './Header'
 import './page.css'
+import { useTranslation } from 'react-i18next'
 
 export const Page = () => {
   const [user, setUser] = React.useState()
+  const { t, i18n } = useTranslation()
 
   return (
     <article>
       <Header
         user={user}
         onLogin={() => setUser({ name: 'Jane Doe' })}
-        onLogout={() => setUser(undefined)}
+        onLogout={() => {
+          i18n.changeLanguage(i18n.language === 'pt' ? 'en' : 'pt')
+          console.log(i18n.language)
+        }}
         onCreateAccount={() => setUser({ name: 'Jane Doe' })}
       />
 
       <section>
-        <h2>Pages in Storybook</h2>
+        <h2>{t('Pages in Storybook')}</h2>
         <p>
           We recommend building UIs with a{' '}
           <a href="https://componentdriven.org" target="_blank" rel="noopener noreferrer">
@@ -24,7 +29,7 @@ export const Page = () => {
           </a>{' '}
           process starting with atomic components and ending with pages.
         </p>
-        <p>
+        <p data-chromatic="ignore">
           Render pages with mock data. This makes it easy to build and review page states without
           needing to navigate to them in your app. Here are some handy patterns for managing page
           data in Storybook:
@@ -52,7 +57,13 @@ export const Page = () => {
         </p>
         <div className="tip-wrapper">
           <span className="tip">Tip</span> Adjust the width of the canvas with the{' '}
-          <svg width="10" height="10" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 12 12"
+            xmlns="http://www.w3.org/2000/svg"
+            className="chromatic-ignore"
+          >
             <g fill="none" fillRule="evenodd">
               <path
                 d="M1.5 5.2h4.8c.3 0 .5.2.5.4v5.1c-.1.2-.3.3-.4.3H1.4a.5.5 0 01-.5-.4V5.7c0-.3.2-.5.5-.5zm0-2.1h6.9c.3 0 .5.2.5.4v7a.5.5 0 01-1 0V4H1.5a.5.5 0 010-1zm0-2.1h9c.3 0 .5.2.5.4v9.1a.5.5 0 01-1 0V2H1.5a.5.5 0 010-1zm4.3 5.2H2V10h3.8V6.2z"

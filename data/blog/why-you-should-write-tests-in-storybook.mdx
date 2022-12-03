@@ -1,0 +1,71 @@
+---
+title: 'Why you should write your tests in Storybook'
+# title: 'All you need to know about Storybook and testing'
+date: '2022-09-02'
+tags: ['storybook', 'tutorial', 'storybook fundamentals']
+draft: false
+images: ['/static/images/why-you-should-write-tests-in-storybook/banner.png']
+summary: 'Unleashing the testing potential of Storybook'
+---
+
+In Storybook 6.4, a whole new set of possibilities were added with the introduction of [interaction testing](blog-link-here). Interaction tests provide you the power of combining browser-compatible versions of [Testing Library](https://testing-library-link-here) and [Jest](https://jest-link-here), provided by Storybook, which run directly in the browser and allow you to write tests very similarly than you do when writing tests for JSDOM.
+
+Before, you were only able to create different variants of your components by passing different props/inputs to it, via args. Cool, that was great for smaller, simpler components. However, as you start adding interactive, perhaps more complex components to Storybook, they might even not receive any props at all.
+
+## The play function
+
+explain what it is, story context,
+
+## Why would I do that?
+
+You might be asking:
+
+> "Wait, I already wrote all my tests in node with Jest and Testing Library. Why go through the trouble of moving them to Storybook?"
+
+## Addon interactions
+
+Even though you can write interactions by using the play function alone, you can certain gain tons more value by using [addon-interactions](url-here).
+
+### The addon panel
+
+Addon interactions will display the interactions and assertions that you wrote, directly in the browser, via its panel. This way, you can easily see which stories contain interactions, and which don't.
+
+![Addon interactions panel]()
+
+Apart from that, you will get valuable feedback of any errors or failures of your tests, or your component:
+
+![Addon interactions panel showing a failure]()
+
+### Step debugger
+
+Additionally, the addon panel provides playback controls, which allows you to go back and forth with all steps you wrote for that story. This gives you the possibility to visualize all states of your component as the interactions happen, and also make it simpler to debug in case of failures:
+
+![Addon interactions panel step through]()
+
+In Storybook 7.0, this feature is enabled by default. In Storybook 6.4, you have to opt-in to it, by adding the following field in your `.storybook/main.js` file:
+
+```js:.storybook/main.js
+module.exports = {
+  features: {
+    interactionsDebugger: true
+  }
+}
+```
+
+![Addon interactions panel]()
+
+## Storybook test runner
+
+explain why use it
+
+## Chromatic
+
+explain why use it
+
+## ESLint is your friend
+
+Storybook provides an ESLint plugin called `eslint-plugin-storybook`, which was created to guide you in all things Storybook, to prevent you from committing common mistakes. When writing interactions in your story
+
+## Conclusion
+
+I hope you enjoyed it, and if you have any questions, feel free to reach out on [Twitter](https://twitter.com/yannbf). If you want to know more about the potential of Storybook and how to use it effectively in React projects, I created a [course](https://www.newline.co/courses/storybook-for-react-apps) that goes from the basics to complex features, with lots of pro tips in between!

@@ -1,0 +1,79 @@
+---
+title: 'How to write efficient tests in Storybook'
+date: '2022-09-02'
+tags: ['storybook', 'storybook fundamentals']
+draft: false
+images: ['/static/images/how-to-write-efficient-tests/banner.png']
+summary: 'Unleashing the testing potential of Storybook'
+---
+
+When writing tests in Storybook, sometimes there are some gotchas to be aware of. This is not necessarily Storybook specific, it's just what it comes when writing tests for your components. In this post, I'll be talking about common mistakes and different tips to help you be an expert when writing tests in Storybook.
+
+## ESLint is your friend
+
+Storybook provides an ESLint plugin called `eslint-plugin-storybook`, which was created to guide you in all things Storybook, to prevent you from committing common mistakes. When writing interactions in your story, it's easy to make simple mistakes such as forgetting an `await`.
+
+If you don't have this plugin in your project, go ahead and install it by following [the docs](getting-started), which is highly recommended and should save you from tons of trouble.
+
+## Understand Testing Library
+
+In Storybook, you write interactions with `@storybook/testing-library`. This package is a wrapper of `@testing-library/dom` + `@testing-library/user-event`.
+
+This means that you can use [their documentation](testing-lib-docs) for guidance. This also means that **whatever issue you might be experiencing in your play function, could also happen if you wrote the same test in JSDOM, even if you didn't have Storybook in your project to start with**.
+
+## Understand the play function
+
+Storybook has a pipeline of events, which happen at a certain order, and depend on what your story has.
+
+```
+Loaders -> Story renders -> Play function executes
+```
+
+Storybook understands that a story has successfully rendered **whenever its first rendering cycle happens**. To visualize things better, suppose you have a component like this:
+
+```jsx MyComponent.jsx
+export const MyComponent = ({ user }) => {
+  if (!user) {
+    // Possible first render here
+    return null
+  }
+
+  return <p>Hello, {user.name}!</p>
+}
+```
+
+and a play function like this:
+
+```js MyComponent.stories.js
+import { within } from '@storybook/testing-library'
+import { expect } from '@storybook/jest'
+
+export const Default = {
+  args: {
+    name: 'World',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const name = await canvas.getByText('Hello World!')
+    await expect(name).toBeInTheDocument()
+  },
+}
+```
+
+The first render of that component is actually **null (nothing)**, and when Storybook executes the play function, it will most likely fail for what you're trying to test. This is the nature of _asynchronous rendering_ and **you should always be aware of how your component behaves** when writing tests for it.
+
+## Testing for async rendering
+
+If your component has multiple rendering cycles based on many things, such as a loading state, you should always account for that when writing tests. Testing Library has incredible helpers for async rendering such as `waitFor` and `findByRole`, which will try to find elements, and if they are not found, it will keep retrying for a couple of (configurable) seconds until the element is found, else it fails. So, if you know your component first renders `null`, for instance, if you use a selector such as `getByRole`, your tests will fail straight away. Instead, use `findBy` selectors which will acount for extra rendering cycles. The play function of the story above would have worked correctly if you used `findByText('Hello World!')` instead.
+
+## It's OK to use screen too
+
+Storybook encourages you **not** to use `screen` from Testing Library. The reason for that is because a story might be rendered many times a the same time, such as in docs mode. If you have tests which do `screen.findByTestId('my-component')`, they will fail with `Found multiple elements with test id blablaCHANGEME`, which is not ideal.
+
+This is why the play function provides `canvasElement` as an argument, which refers to the HTMl element that wraps your story.
+
+However, there are scenarios of which _you have to_ use `screen`. Suppose you have a Modal component which renders in `document.body`. That will definitely be _outside_ of the canvas element, thus you can't use `canvas.findByTestId('my-component')`. In such cases, you should use `screen.findByTestId('my-component')` instead.
+
+## Conclusion
+
+Thanks for reading this far. I hope these tips will help you write more efficient tests in your project. If you have any questions, feel free to reach out on [Twitter](https://twitter.com/yannbf). If you want to know more about the potential of Storybook and how to use it effectively in React projects, I created a [course](https://www.newline.co/courses/storybook-for-react-apps) that goes from the basics to complex features, with lots of pro tips in between!
