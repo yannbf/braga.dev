@@ -8,3 +8,4 @@
 - Storybook for A/B testing
 - Taking snapshot of iframes in Chromatic + play function
 - Handling complex (non serializable) values as args (mapping feature)
+- Using addon links properly
