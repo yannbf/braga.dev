@@ -1,5 +1,13 @@
 const talksData = [
   {
+    title: 'State of Storybook 7',
+    date: '08-02-2023',
+    location: `JS World ⋅ Amsterdam, The Netherlands`,
+    link: '',
+    thumbnail: 'state-of-sb-7.webp',
+    tags: ['testing'],
+  },
+  {
     title: 'Storybook and Testing',
     date: '01-04-2022',
     location: `React Live ⋅ Amsterdam, The Netherlands`,
