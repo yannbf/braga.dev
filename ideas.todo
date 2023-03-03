@@ -9,3 +9,5 @@
 - Taking snapshot of iframes in Chromatic + play function
 - Handling complex (non serializable) values as args (mapping feature)
 - Using addon links properly
+- Migrating to SB 7
+- Magic of SB 7 doc blocks
