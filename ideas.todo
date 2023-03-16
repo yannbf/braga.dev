@@ -9,6 +9,7 @@
 - Taking snapshot of iframes in Chromatic + play function
 - Handling complex (non serializable) values as args (mapping feature)
 - Using addon links properly
-- Migrating to SB 7
+- Migrating to SB 7 (to the point)
 - Magic of SB 7 doc blocks
 - Mocking dates in SB
+- addon showcase #3 -> VSCode "Story explorer" extension
