@@ -7,7 +7,6 @@ const Talk = ({ link, thumbnail, title, tags, location }) => {
       alt="illustration"
       className="w-full object-cover object-center md:h-36 lg:h-48"
       src={`/static/images/talks/${thumbnail}`}
-      layout="responsive"
       width={640}
       height={400}
     />
