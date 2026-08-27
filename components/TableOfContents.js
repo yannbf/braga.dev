@@ -110,7 +110,7 @@ const TableOfContents = ({
       <>
         {asDisclosure ? (
           <details open>
-            <summary className="ml-6 pt-2 pb-2 text-xl font-bold">Table of Contents</summary>
+            <summary className="ml-6 pb-2 pt-2 text-xl font-bold">Table of Contents</summary>
             <div className="ml-6">{tocList}</div>
           </details>
         ) : (
@@ -123,7 +123,7 @@ const TableOfContents = ({
   return (
     <aside>
       <nav>
-        <h2 className="pt-10 pb-2 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <h2 className="pb-2 pt-10 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
           Table of contents
         </h2>
         {tocList}

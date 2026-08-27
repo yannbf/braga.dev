@@ -85,7 +85,7 @@ export default function PostLayout({
               <div>
                 <PageTitle>{title}</PageTitle>
               </div>
-              <div className="pt-2 pb-1">
+              <div className="pb-1 pt-2">
                 {'⏳'}
                 <span>{readingTimeText}</span>
               </div>
@@ -98,8 +98,8 @@ export default function PostLayout({
             style={{ gridTemplateRows: 'auto 1fr' }}
           >
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
-              <div className="prose max-w-none pt-10 pb-8 dark:prose-dark">{children}</div>
-              <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
+              <div className="prose max-w-none pb-8 pt-10 dark:prose-dark">{children}</div>
+              <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
                 <Link href={discussUrl(slug)} rel="nofollow">
                   {'Discuss on Twitter'}
                 </Link>
