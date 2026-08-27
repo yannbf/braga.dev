@@ -5,15 +5,9 @@ module.exports = {
     },
   ],
   staticDirs: ['../public'],
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    'storybook-addon-variants',
-    'storybook-addon-next',
-  ],
+  addons: ['@storybook/addon-links', '@storybook/addon-docs'],
   framework: {
-    name: '@storybook/react-webpack5',
+    name: '@storybook/nextjs',
     options: {},
   },
   docs: {
