@@ -12,12 +12,8 @@ import siteMetadata from '@/data/siteMetadata'
 import blogMetadata from '@/data/blogMetadata'
 import Analytics from '@/components/analytics'
 import LayoutWrapper from '@/components/LayoutWrapper'
-import { ClientReload } from '@/components/ClientReload'
 import CommandPalette from '@/components/CommandPalette'
 import * as React from 'react'
-
-const isDevelopment = process.env.NODE_ENV === 'development'
-const isSocket = process.env.SOCKET
 
 export default function App({ Component, pageProps }) {
   return (
@@ -25,7 +21,6 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
       </Head>
-      {isDevelopment && isSocket && <ClientReload />}
       <Analytics />
       <CommandPalette blogPosts={blogMetadata}>
         <LayoutWrapper>

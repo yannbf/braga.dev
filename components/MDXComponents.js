@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import { useMemo } from 'react'
 import { getMDXComponent } from 'mdx-bundler/client'
+import { CH } from '@code-hike/mdx/components'
 import Image from './Image'
 import CustomLink from './Link'
 import TableOfContents from './TableOfContents'
@@ -8,6 +9,7 @@ import Pre from './Pre'
 import { BlogNewsletterForm } from './NewsletterForm'
 
 export const MDXComponents = {
+  CH,
   // eslint-disable-next-line jsx-a11y/alt-text
   Image: (props) => <Image placeholder="blur" {...props} />,
   TableOfContents,
