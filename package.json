@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node ./scripts/generate-sitemap",
+    "build": "next build && node --experimental-strip-types ./scripts/generate-sitemap.ts",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir components --dir lib --dir layouts --dir scripts",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky",
     "storybook": "npx storybook dev -p 6006",
     "build-storybook": "npx storybook build",
@@ -55,6 +56,13 @@
     "@storybook/addon-links": "10.5.10",
     "@storybook/nextjs": "10.5.10",
     "@svgr/webpack": "^8.1.0",
+    "@types/dedent": "^0.7.2",
+    "@types/inquirer": "^9.0.10",
+    "@types/js-yaml": "^4.0.9",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.22",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
     "chromatic": "^11.0.0",
     "cross-env": "^7.0.3",
     "dedent": "^1.5.3",
@@ -69,7 +77,8 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.13",
-    "storybook": "10.5.10"
+    "storybook": "10.5.10",
+    "typescript": "6.0.3"
   },
   "lint-staged": {
     "*.+(js|jsx|ts|tsx)": [
