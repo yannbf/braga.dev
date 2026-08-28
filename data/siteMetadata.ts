@@ -13,6 +13,7 @@ export interface SiteMetadata {
   email: string
   github: string
   twitter: string
+  bluesky: string
   youtube: string
   linkedin: string
   locale: string
@@ -69,6 +70,7 @@ const siteMetadata: SiteMetadata = {
   email: 'yannbf@gmail.com',
   github: 'https://github.com/yannbf',
   twitter: 'https://twitter.com/yannbf',
+  bluesky: 'https://bsky.app/profile/yannbf',
   youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com/in/yannbraga/',
   locale: 'en-US',

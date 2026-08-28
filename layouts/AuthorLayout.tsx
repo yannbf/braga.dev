@@ -10,7 +10,7 @@ interface AuthorLayoutProps {
 }
 
 export default function AuthorLayout({ children, frontMatter }: AuthorLayoutProps) {
-  const { name, avatar, occupation, company, twitter, linkedin, github } = frontMatter
+  const { name, avatar, occupation, company, twitter, bluesky, linkedin, github } = frontMatter
 
   return (
     <>
@@ -37,6 +37,7 @@ export default function AuthorLayout({ children, frontMatter }: AuthorLayoutProp
               <SocialIcon kind="github" href={github} />
               <SocialIcon kind="linkedin" href={linkedin} />
               <SocialIcon kind="twitter" href={twitter} />
+              <SocialIcon kind="bluesky" href={bluesky} animated={false} />
             </div>
           </div>
           <div className="prose max-w-none pb-8 pt-8 dark:prose-dark xl:col-span-2">{children}</div>

@@ -5,6 +5,7 @@ occupation: Senior OSS Engineer - Storybook maintainer
 company: Chromatic
 email: yannbf@gmail.com
 twitter: https://twitter.com/yannbf
+bluesky: https://bsky.app/profile/yannbf
 linkedin: https://www.linkedin.com/in/yannbraga/
 github: https://github.com/yannbf
 ---

@@ -4,19 +4,26 @@ import Github from './github.svg'
 // import Youtube from './youtube.svg'
 import Linkedin from './linkedin.svg'
 import Twitter from './twitter.svg'
+import Bluesky from './bluesky.svg'
 
 const components: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   github: Github,
   // youtube: Youtube,
   linkedin: Linkedin,
   twitter: Twitter,
+  bluesky: Bluesky,
 }
 
 const hoverColors: Record<string, string> = {
   github: 'primary',
   linkedin: 'primary',
   twitter: 'primary',
+  bluesky: 'primary',
 }
+
+// Only these kinds ship a Lottie animation under ./animations — importing a
+// nonexistent one rejects at runtime, so the effect below skips the rest.
+const animatedKinds = new Set(['github', 'linkedin', 'twitter'])
 
 interface IconProps {
   kind: string
@@ -30,6 +37,7 @@ const Icon = ({ kind, href, size = 8, animated = true }: IconProps) => {
   const lottieRef = useRef<LottieRefCurrentProps>(null)
 
   useEffect(() => {
+    if (!animatedKinds.has(kind)) return
     // Lazy load animations for better performance
     import(`./animations/${kind}.json`).then(setAnimationData)
   }, [kind])

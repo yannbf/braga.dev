@@ -42,6 +42,7 @@ export interface AuthorFrontMatter {
   company?: string
   email?: string
   twitter?: string
+  bluesky?: string
   linkedin?: string
   github?: string
   layout?: string
