@@ -174,6 +174,10 @@ export const BlogSEO = ({
 
   const twImageUrl = featuredImages[0].url
 
+  // Escaping `<` prevents a `</script>` inside a string field (e.g. the
+  // summary) from closing the tag early when the JSON is serialized as text.
+  const jsonLd = JSON.stringify(structuredData, null, 2).replace(/</g, '\\u003c')
+
   return (
     <>
       <CommonSEO
@@ -187,13 +191,16 @@ export const BlogSEO = ({
       <Head>
         {date && <meta property="article:published_time" content={publishedAt} />}
         {lastUpdated && <meta property="article:modified_time" content={modifiedAt} />}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData, null, 2),
-          }}
-        />
       </Head>
+      {/*
+        next/head's Head component warns ("script tags cannot be used within
+        next/head") and strips <script> children. Structured data doesn't
+        need to live in <head> for crawlers to pick it up, so it's rendered
+        as a plain child of the page instead.
+      */}
+      <script type="application/ld+json" suppressHydrationWarning>
+        {jsonLd}
+      </script>
     </>
   )
 }
