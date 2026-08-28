@@ -1,6 +1,6 @@
 import { TagSEO } from '@/components/SEO'
 import siteMetadata from '@/data/siteMetadata'
-import ListLayout from '@/layouts/ListLayout'
+import ListLayoutWithTags from '@/layouts/ListLayoutWithTags'
 import generateRss from '@/lib/generate-rss'
 import { getAllFilesFrontMatter } from '@/lib/mdx'
 import { getAllTags } from '@/lib/tags'
@@ -29,6 +29,7 @@ export async function getStaticProps({ params }: { params: { tag: string } }) {
   const filteredPosts = allPosts.filter(
     (post) => post.draft !== true && post.tags.map((t) => kebabCase(t)).includes(params.tag)
   )
+  const tagCounts = await getAllTags('blog')
 
   // rss
   if (filteredPosts.length > 0) {
@@ -38,10 +39,14 @@ export async function getStaticProps({ params }: { params: { tag: string } }) {
     fs.writeFileSync(path.join(rssPath, 'feed.xml'), rss)
   }
 
-  return { props: { posts: filteredPosts, tag: params.tag } }
+  return { props: { posts: filteredPosts, tag: params.tag, tagCounts } }
 }
 
-export default function Tag({ posts, tag }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Tag({
+  posts,
+  tag,
+  tagCounts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   // Capitalize first letter and convert space to dash
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   return (
@@ -50,7 +55,7 @@ export default function Tag({ posts, tag }: InferGetStaticPropsType<typeof getSt
         title={`${tag} - ${siteMetadata.author}`}
         description={`${tag} tags - ${siteMetadata.author}`}
       />
-      <ListLayout posts={posts} title={title} />
+      <ListLayoutWithTags posts={posts} title={title} tagCounts={tagCounts} />
     </>
   )
 }

@@ -5,6 +5,9 @@ const config = {
     {
       directory: '../components',
     },
+    {
+      directory: '../layouts',
+    },
   ],
   staticDirs: ['../public'],
   addons: ['@storybook/addon-links', '@storybook/addon-docs', '@storybook/addon-mcp'],

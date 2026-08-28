@@ -1,7 +1,8 @@
 import { PageSEO } from '@/components/SEO'
 import siteMetadata from '@/data/siteMetadata'
 import { getAllFilesFrontMatter } from '@/lib/mdx'
-import ListLayout from '@/layouts/ListLayout'
+import { getAllTags } from '@/lib/tags'
+import ListLayoutWithTags from '@/layouts/ListLayoutWithTags'
 import { POSTS_PER_PAGE } from '../../blog'
 import type { InferGetStaticPropsType } from 'next'
 
@@ -21,6 +22,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }: { params: { page: string } }) {
   const { page } = params
   const posts = await getAllFilesFrontMatter('blog')
+  const tagCounts = await getAllTags('blog')
   const pageNumber = parseInt(page)
   const initialDisplayPosts = posts.slice(
     POSTS_PER_PAGE * (pageNumber - 1),
@@ -36,6 +38,7 @@ export async function getStaticProps({ params }: { params: { page: string } }) {
       posts,
       initialDisplayPosts,
       pagination,
+      tagCounts,
     },
   }
 }
@@ -44,14 +47,16 @@ export default function PostPage({
   posts,
   initialDisplayPosts,
   pagination,
+  tagCounts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
-      <ListLayout
+      <ListLayoutWithTags
         posts={posts}
         initialDisplayPosts={initialDisplayPosts}
         pagination={pagination}
+        tagCounts={tagCounts}
         title="All Posts"
       />
     </>
