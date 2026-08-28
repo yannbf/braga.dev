@@ -1,10 +1,9 @@
 import type { ReactNode, SVGProps } from 'react'
 import Image from '@/components/Image'
 import Link from '@/components/Link'
-import SocialIcon from '@/components/icon'
 import type { CVData, CVExperienceEntry } from '@/data/cvData'
 
-const BriefcaseIcon = (props: SVGProps<SVGSVGElement>) => (
+const DownloadIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -15,68 +14,20 @@ const BriefcaseIcon = (props: SVGProps<SVGSVGElement>) => (
     strokeLinejoin="round"
     {...props}
   >
-    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-  </svg>
-)
-
-const CodeIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <polyline points="16 18 22 12 16 6" />
-    <polyline points="8 6 2 12 8 18" />
-  </svg>
-)
-
-const SparklesIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" />
-  </svg>
-)
-
-const GraduationCapIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M22 10 12 5 2 10l10 5 10-5Z" />
-    <path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5" />
+    <path d="M12 3v12" />
+    <path d="m7 10 5 5 5-5" />
+    <path d="M5 21h14" />
   </svg>
 )
 
 interface CVSectionProps {
   title: string
-  icon: ReactNode
   children: ReactNode
 }
 
-const CVSection = ({ title, icon, children }: CVSectionProps) => (
-  <section className="pt-8">
-    <h2 className="mb-4 flex items-center gap-2 text-base font-bold uppercase tracking-wide text-gray-900 dark:text-gray-100">
-      <span className="text-primary-500 dark:text-primary-400">{icon}</span>
+const CVSection = ({ title, children }: CVSectionProps) => (
+  <section className="mt-6 break-inside-avoid">
+    <h2 className="mb-2.5 border-b border-gray-300 pb-1 text-[11px] font-semibold uppercase tracking-widest text-gray-500">
       {title}
     </h2>
     {children}
@@ -93,20 +44,20 @@ const ExperienceEntry = ({
   bullets,
   techLine,
 }: CVExperienceEntry) => (
-  <div>
+  <div className="break-inside-avoid">
     <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-      <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-        {company} <span className="font-normal text-gray-500 dark:text-gray-400">— {role}</span>
+      <h3 className="font-semibold text-gray-900">
+        {company} <span className="font-normal text-gray-500">— {role}</span>
       </h3>
-      <span className="whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
+      <span className="whitespace-nowrap text-right text-xs text-gray-500">
         {start} – {end}
       </span>
     </div>
-    <p className="text-xs italic text-gray-500 dark:text-gray-400">{location}</p>
-    {intro && <p className="mt-1.5 text-gray-700 dark:text-gray-300">{intro}</p>}
-    {techLine && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{techLine}</p>}
+    <p className="text-xs italic text-gray-500">{location}</p>
+    {intro && <p className="mt-1.5 text-[13px] leading-snug text-gray-700">{intro}</p>}
+    {techLine && <p className="mt-1 text-xs text-gray-500">{techLine}</p>}
     {bullets && (
-      <ul className="mt-1.5 list-disc space-y-1 pl-5 text-gray-700 dark:text-gray-300">
+      <ul className="mt-1.5 list-disc space-y-1 pl-4 text-[13px] leading-snug text-gray-700">
         {bullets.map((bullet) => (
           <li key={bullet}>{bullet}</li>
         ))}
@@ -134,108 +85,97 @@ const CV = ({ data }: CVProps) => {
   } = data
 
   return (
-    <div className="cv-card overflow-hidden rounded-2xl border border-gray-200 border-opacity-20 bg-white p-6 text-sm shadow-lg shadow-gray-400/20 dark:bg-[#303030] dark:shadow-gray-800/20 sm:p-10 print:rounded-none print:border-0 print:bg-white print:p-0 print:text-black print:shadow-none">
-      <header className="flex flex-col items-center text-center">
-        <Image
-          src={avatar}
-          alt={name}
-          width={96}
-          height={96}
-          className="h-24 w-24 rounded-full print:h-20 print:w-20"
-        />
-        <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 print:text-black">
-          {name}
-        </h1>
-        <p className="mt-1 text-gray-600 dark:text-gray-300 print:text-black">{role}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-400 print:text-black">{location}</p>
-        <div className="mt-4 flex space-x-3 print:hidden">
-          {links.map((link) => (
-            <SocialIcon
-              key={link.kind}
-              kind={link.kind}
-              href={link.href}
-              animated={false}
-              size="6"
-            />
-          ))}
-        </div>
-        {/* Screen-reader/print fallback for the icon-only link row above. */}
-        <ul className="mt-2 hidden text-xs text-gray-600 print:flex print:flex-wrap print:justify-center print:gap-x-3 print:text-black">
-          {links.map((link) => (
-            <li key={link.kind}>{link.href.replace(/^https?:\/\//, '')}</li>
-          ))}
-        </ul>
-      </header>
+    <div className="relative -mx-4 w-screen max-w-none bg-gray-200 px-4 py-10 dark:bg-neutral-950 sm:-mx-6 sm:px-6 sm:py-16 xl:left-1/2 xl:right-1/2 xl:-mx-[50vw] xl:w-screen xl:px-8 print:static print:left-auto print:right-auto print:m-0 print:w-auto print:bg-white print:p-0">
+      <button
+        type="button"
+        onClick={() => window.print()}
+        className="fixed right-4 top-4 z-10 flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-xs font-medium text-white shadow-lg transition hover:bg-gray-700 dark:bg-black dark:hover:bg-gray-800 print:hidden"
+      >
+        <DownloadIcon className="h-3.5 w-3.5" />
+        Download PDF
+      </button>
 
-      <p className="mt-6 text-gray-700 dark:text-gray-300 print:text-black">{summary}</p>
-
-      <CVSection title="Work Experience" icon={<BriefcaseIcon className="h-4 w-4" />}>
-        <div className="space-y-6">
-          {experience.map((entry) => (
-            <ExperienceEntry key={entry.company} {...entry} />
-          ))}
-        </div>
-      </CVSection>
-
-      <CVSection title="Open Source" icon={<CodeIcon className="h-4 w-4" />}>
-        <ul className="space-y-2">
-          {openSource.map((item) => (
-            <li key={item.name}>
-              <Link
-                href={item.href}
-                className="font-semibold text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400 print:text-black"
-              >
-                {item.name}
-              </Link>{' '}
-              <span className="text-gray-500 dark:text-gray-400 print:text-black">
-                — {item.role}
-              </span>
-              {item.description && (
-                <span className="text-gray-700 dark:text-gray-300 print:text-black">
-                  : {item.description}
+      <div className="mx-auto max-w-[210mm] rounded-sm bg-white p-12 text-sm text-gray-900 shadow-2xl print:max-w-none print:rounded-none print:p-0 print:shadow-none">
+        <header className="flex items-start gap-5 border-b border-gray-300 pb-5">
+          <Image
+            src={avatar}
+            alt={name}
+            width={72}
+            height={72}
+            className="h-[72px] w-[72px] rounded-full print:h-16 print:w-16"
+          />
+          <div>
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+              {name}
+            </h1>
+            <p className="mt-0.5 text-sm text-gray-600">{role}</p>
+            <p className="text-xs text-gray-500">{location}</p>
+            <p className="mt-2 flex flex-wrap gap-x-1.5 gap-y-0.5 text-xs text-gray-600">
+              {links.map((link, index) => (
+                <span key={link.kind} className="flex items-center gap-1.5">
+                  <Link href={link.href} className="hover:text-gray-900 hover:underline">
+                    {link.href.replace(/^https?:\/\//, '')}
+                  </Link>
+                  {index < links.length - 1 && <span className="text-gray-300">·</span>}
                 </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </CVSection>
+              ))}
+            </p>
+          </div>
+        </header>
 
-      <CVSection title="Skills" icon={<SparklesIcon className="h-4 w-4" />}>
-        <div className="flex flex-wrap gap-2">
-          {skills.map((skill) => (
-            <span
-              key={skill}
-              className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-200 print:border print:border-gray-400 print:bg-white print:text-black"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
-      </CVSection>
+        <p className="mt-5 text-[13px] leading-snug text-gray-700">{summary}</p>
 
-      <CVSection title="Education" icon={<GraduationCapIcon className="h-4 w-4" />}>
-        <ul className="space-y-1">
-          {education.map((entry) => (
-            <li
-              key={entry.institution}
-              className="text-gray-700 dark:text-gray-300 print:text-black"
-            >
-              {entry.institution}
-              {entry.degree ? ` — ${entry.degree}` : ''}
-            </li>
-          ))}
-        </ul>
-      </CVSection>
+        <CVSection title="Work Experience">
+          <div className="space-y-5">
+            {experience.map((entry) => (
+              <ExperienceEntry key={entry.company} {...entry} />
+            ))}
+          </div>
+        </CVSection>
 
-      <p className="mt-8 border-t border-gray-200 pt-4 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400 print:border-gray-400 print:text-black">
-        Conference talks and appearances →{' '}
-        <Link
-          href="/talks"
-          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 print:text-black"
-        >
-          /talks
-        </Link>
-      </p>
+        <CVSection title="Open Source">
+          <ul className="space-y-1.5">
+            {openSource.map((item) => (
+              <li key={item.name} className="break-inside-avoid text-[13px] leading-snug">
+                <Link href={item.href} className="font-semibold text-gray-900 hover:underline">
+                  {item.name}
+                </Link>{' '}
+                <span className="text-gray-500">— {item.role}</span>
+                {item.description && <span className="text-gray-700">: {item.description}</span>}
+              </li>
+            ))}
+          </ul>
+        </CVSection>
+
+        <CVSection title="Skills">
+          <p className="text-[13px] leading-snug text-gray-700">
+            {skills.map((skill, index) => (
+              <span key={skill}>
+                {skill}
+                {index < skills.length - 1 && <span className="text-gray-400"> · </span>}
+              </span>
+            ))}
+          </p>
+        </CVSection>
+
+        <CVSection title="Education">
+          <ul className="space-y-1">
+            {education.map((entry) => (
+              <li key={entry.institution} className="text-[13px] leading-snug text-gray-700">
+                {entry.institution}
+                {entry.degree ? ` — ${entry.degree}` : ''}
+              </li>
+            ))}
+          </ul>
+        </CVSection>
+
+        <p className="mt-6 border-t border-gray-300 pt-3 text-xs text-gray-500">
+          Conference talks and appearances →{' '}
+          <Link href="/talks" className="text-gray-700 hover:underline">
+            /talks
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }

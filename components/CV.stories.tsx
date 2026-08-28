@@ -16,17 +16,11 @@ export const Default: Story = {
   args: {
     data: cvData,
   },
-  decorators: [
-    (StoryFn) => (
-      <div className="max-w-3xl">
-        <StoryFn />
-      </div>
-    ),
-  ],
   play: async ({ canvas }) => {
     await expect(
       canvas.getByText('Senior Software Engineer @ Chromatic — Storybook maintainer')
     ).toBeInTheDocument()
     await expect(canvas.getByText('Work Experience')).toBeInTheDocument()
+    await expect(canvas.getByRole('button', { name: /download pdf/i })).toBeInTheDocument()
   },
 }

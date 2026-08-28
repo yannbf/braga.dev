@@ -7,9 +7,7 @@ export default function CVPage() {
   return (
     <>
       <PageSEO title={`CV - ${siteMetadata.author}`} description="Yann Braga's resume" />
-      <div className="mx-auto max-w-3xl py-8">
-        <CV data={cvData} />
-      </div>
+      <CV data={cvData} />
     </>
   )
 }
