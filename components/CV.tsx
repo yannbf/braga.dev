@@ -26,8 +26,8 @@ interface CVSectionProps {
 }
 
 const CVSection = ({ title, children }: CVSectionProps) => (
-  <section className="mt-6 break-inside-avoid">
-    <h2 className="mb-2.5 border-b border-gray-300 pb-1 text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+  <section className="mt-6">
+    <h2 className="mb-2.5 break-after-avoid border-b border-gray-300 pb-1 text-[11px] font-semibold uppercase tracking-widest text-gray-500">
       {title}
     </h2>
     {children}

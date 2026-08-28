@@ -51,6 +51,9 @@ const Icon = ({ kind, href, size = 8, animated = true }: IconProps) => {
   const SocialSvg = components[kind]
 
   const iconColor = hoverColors[kind] || 'blue'
+  // Tailwind only generates classes it sees verbatim, so runtime-composed
+  // `h-${size}` classes never exist in the CSS — size in px directly instead.
+  const sizePx = Number(size) * 4
 
   const Wrapper = ({ href, ...rest }: HTMLAttributes<HTMLElement> & { href?: string }) => {
     return href ? (
@@ -63,7 +66,7 @@ const Icon = ({ kind, href, size = 8, animated = true }: IconProps) => {
   return (
     <Wrapper
       href={href}
-      className="text-sm text-gray-500 transition hover:text-blue-600"
+      className="inline-flex items-center text-sm text-gray-500 transition hover:text-blue-600"
       onMouseEnter={() => lottieRef.current?.play()}
       onMouseLeave={() => lottieRef.current?.stop()}
     >
@@ -75,12 +78,12 @@ const Icon = ({ kind, href, size = 8, animated = true }: IconProps) => {
           animationData={animationData}
           loop={false}
           autoplay={false}
-          width={32}
-          height={32}
+          style={{ width: sizePx, height: sizePx }}
         />
       ) : (
         <SocialSvg
-          className={`text-gray-700 hover:text-${iconColor}-500 dark:text-gray-200 dark:hover:text-${iconColor}-400 h-${size} w-${size}`}
+          className={`icon-draw text-gray-700 hover:text-${iconColor}-500 dark:text-gray-200 dark:hover:text-${iconColor}-400`}
+          style={{ width: sizePx, height: sizePx }}
         />
       )}
     </Wrapper>
