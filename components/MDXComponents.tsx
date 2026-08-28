@@ -6,6 +6,7 @@ import Image from './Image'
 import CustomLink from './Link'
 import TableOfContents from './TableOfContents'
 import Pre from './Pre'
+import TableWrapper from './TableWrapper'
 import { BlogNewsletterForm } from './NewsletterForm'
 import type { ImageProps } from 'next/image'
 
@@ -19,6 +20,7 @@ export const MDXComponents: Record<string, any> = {
   TableOfContents,
   a: CustomLink,
   pre: Pre,
+  table: TableWrapper,
   BlogNewsletterForm: BlogNewsletterForm,
   wrapper: ({ components, layout, ...rest }: { components?: unknown; layout: string }) => {
     const Layout: ComponentType<any> = require(`../layouts/${layout}`).default

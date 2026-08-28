@@ -17,6 +17,20 @@
 .csl-entry {
   @apply my-5;
 }
+
+/* KaTeX renders display math at its natural width, which can overflow the
+   prose column on narrow viewports; scroll instead of breaking layout. */
+.katex-display {
+  overflow: auto hidden;
+}
+
+/* Visible focus outline for keyboard navigation, matching links, nav items,
+   the theme switch, and the mobile-nav / command-palette triggers. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  @apply rounded-sm outline outline-2 outline-offset-2 outline-primary-500 dark:outline-primary-400;
+}
 * {
   transition:
     background-color 0.15s ease-in-out,
