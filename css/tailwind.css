@@ -94,6 +94,16 @@ button:focus-visible,
     border-color 0.15s ease-in-out;
 }
 
+/* Printing any page (⌘P) should read as plain paper, regardless of the
+   active theme: white background, black text. */
+@media print {
+  html,
+  body {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+}
+
 /* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
 input:-webkit-autofill,
 input:-webkit-autofill:focus {

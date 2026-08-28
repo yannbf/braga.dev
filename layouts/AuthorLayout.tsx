@@ -1,5 +1,6 @@
 import SocialIcon from '@/components/icon'
 import Image from '@/components/Image'
+import Link from '@/components/Link'
 import { PageSEO } from '@/components/SEO'
 import type { ReactNode } from 'react'
 import type { AuthorFrontMatter } from '@/lib/types'
@@ -39,6 +40,12 @@ export default function AuthorLayout({ children, frontMatter }: AuthorLayoutProp
               <SocialIcon kind="twitter" href={twitter} />
               <SocialIcon kind="bluesky" href={bluesky} animated={false} />
             </div>
+            <Link
+              href="/cv"
+              className="mt-6 rounded-2xl bg-primary-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-600 dark:hover:bg-primary-400"
+            >
+              View my CV
+            </Link>
           </div>
           <div className="prose max-w-none pb-8 pt-8 dark:prose-dark xl:col-span-2">{children}</div>
         </div>
