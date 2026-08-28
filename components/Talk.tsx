@@ -1,8 +1,15 @@
 import Link from '@/components/Link'
 import Image from '@/components/Image'
+import formatDate from '@/lib/utils/formatDate'
 import type { Talk as TalkType } from '@/data/talksData'
 
-const Talk = ({ link, thumbnail, title, tags, location }: TalkType) => {
+// Talk dates are stored as MM-DD-YYYY, which Date.parse does not handle reliably
+const parseTalkDate = (date: string) => {
+  const [month, day, year] = date.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
+const Talk = ({ link, thumbnail, title, tags, location, date }: TalkType) => {
   let thumbnailEl = (
     <Image
       alt="illustration"
@@ -30,6 +37,12 @@ const Talk = ({ link, thumbnail, title, tags, location }: TalkType) => {
               <p className="inline-flex items-center dark:text-gray-400">{location}</p>
             </div>
           </div>
+          <time
+            dateTime={date.replace(/^(\d{2})-(\d{2})-(\d{4})$/, '$3-$1-$2')}
+            className="text-sm text-gray-400 dark:text-gray-500"
+          >
+            {formatDate(parseTalkDate(date))}
+          </time>
         </div>
       </div>
     </Link>

@@ -54,6 +54,7 @@
     "@next/bundle-analyzer": "^15.5.0",
     "@storybook/addon-docs": "10.5.10",
     "@storybook/addon-links": "10.5.10",
+    "@storybook/addon-mcp": "^0.7.0",
     "@storybook/nextjs": "10.5.10",
     "@svgr/webpack": "^8.1.0",
     "@types/dedent": "^0.7.2",

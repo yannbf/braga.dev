@@ -8,7 +8,7 @@ const config = {
     },
   ],
   staticDirs: ['../public'],
-  addons: ['@storybook/addon-links', '@storybook/addon-docs'],
+  addons: ['@storybook/addon-links', '@storybook/addon-docs', '@storybook/addon-mcp'],
   framework: {
     name: '@storybook/nextjs',
     options: {},

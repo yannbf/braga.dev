@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
+import { expect } from 'storybook/test'
 import Talk from './Talk'
 
 const meta: Meta<typeof Talk> = {
@@ -26,4 +27,8 @@ export const Default: Story = {
       </div>
     ),
   ],
+  play: async ({ canvas }) => {
+    const time = canvas.getByText('January 4, 2022')
+    await expect(time).toHaveAttribute('datetime', '2022-01-04')
+  },
 }
