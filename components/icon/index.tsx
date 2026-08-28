@@ -5,6 +5,7 @@ import Github from './github.svg'
 import Linkedin from './linkedin.svg'
 import Twitter from './twitter.svg'
 import Bluesky from './bluesky.svg'
+import External from './external.svg'
 
 const components: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   github: Github,
@@ -12,6 +13,7 @@ const components: Record<string, FC<SVGProps<SVGSVGElement>>> = {
   linkedin: Linkedin,
   twitter: Twitter,
   bluesky: Bluesky,
+  website: External,
 }
 
 const hoverColors: Record<string, string> = {
@@ -19,6 +21,7 @@ const hoverColors: Record<string, string> = {
   linkedin: 'primary',
   twitter: 'primary',
   bluesky: 'primary',
+  website: 'primary',
 }
 
 // Only these kinds ship a Lottie animation under ./animations — importing a
