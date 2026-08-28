@@ -11,6 +11,7 @@ import remarkMath from 'remark-math'
 import remarkExtractFrontmatter from './remark-extract-frontmatter'
 import remarkTocHeadings, { TocHeading } from './remark-toc-headings'
 import remarkImgToJsx from './remark-img-to-jsx'
+import remarkGithubAlert from './remark-github-alert'
 import { remarkCodeHike } from '@code-hike/mdx'
 // Rehype packages
 import rehypeSlug from 'rehype-slug'
@@ -83,6 +84,7 @@ export async function getFileBySlug<T extends Record<string, any> = RawPostFront
         [remarkCodeHike, { theme, lineNumbers: false, showCopyButton: true }],
         remarkMath,
         remarkImgToJsx,
+        remarkGithubAlert,
       ] as any
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
