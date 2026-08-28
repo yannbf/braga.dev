@@ -40,6 +40,7 @@ const Talk = ({ link, thumbnail, title, tags, location, date }: TalkType) => {
           <time
             dateTime={date.replace(/^(\d{2})-(\d{2})-(\d{4})$/, '$3-$1-$2')}
             className="text-sm text-gray-400 dark:text-gray-500"
+            suppressHydrationWarning
           >
             {formatDate(parseTalkDate(date))}
           </time>
