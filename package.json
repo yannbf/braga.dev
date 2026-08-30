@@ -12,7 +12,7 @@
     "prepare": "husky",
     "storybook": "npx storybook dev -p 6006",
     "build-storybook": "npx storybook build",
-    "storybook-blog": "yarn storybook --config-dir .storybook-blog",
+    "storybook-blog": "pnpm storybook --config-dir .storybook-blog",
     "build-storybook-blog": "npx storybook build --config-dir .storybook-blog",
     "chromatic": "npx chromatic --exit-zero-on-changes --only-changed"
   },
@@ -30,6 +30,7 @@
     "image-size": "1.0.0",
     "kbar": "1.0.0",
     "lottie-react": "2.4.2",
+    "mdast-util-to-string": "3.2.0",
     "mdx-bundler": "9.2.1",
     "next": "15.5.24",
     "next-themes": "^0.0.14",
@@ -89,5 +90,5 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@4.18.0"
+  "packageManager": "pnpm@10.33.0"
 }
